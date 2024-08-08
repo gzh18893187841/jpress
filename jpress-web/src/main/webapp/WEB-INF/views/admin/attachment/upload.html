@@ -1,0 +1,116 @@
+#@layout()
+
+#define css()
+
+<link rel="stylesheet" href="#(CPATH)/static/components/jquery-file-upload/css/jquery.fileupload.css">
+<style>
+    #uploader {
+        height: 230px;
+    }
+    .myPanel {
+        font-size: 25px;
+        color: #ccc;
+        text-align: center;
+        padding-top: 60px;
+    }
+</style>
+#end
+
+#define script()
+<script src="#(CPATH)/static/components/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="#(CPATH)/static/components/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script src="#(CPATH)/static/components/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script>
+
+    function selectFile(){
+        var categoryId = $("#category").val();
+        $('#cfile').fileupload({
+            dropZone: $('#uploader'),
+            url: '#(CPATH)/commons/attachment/upload?categoryId='+categoryId,
+            sequentialUploads: true,
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $(".myPanel").text("上传进度：" + progress + "%")
+            },
+            done: function (e, data) {
+
+                $(".myPanel").text("或者拖动文件到这里进行上传...");
+
+                if(data.result.state == "ok"){
+                    toastr.success("文件上传成功...")
+                }else {
+                    toastr.error(data.result.message)
+                }
+            }
+        });
+    }
+
+
+</script>
+#end
+
+#define content()
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <h1>
+                                附件上传
+                                <small data-toggle="tooltip" title="" data-placement="right"
+                                       data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                                <small> 首页 / 附件 / 附件上传</small>
+                            </h1>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+
+        <div class="container-fluid">
+                <div class="card card-outline card-primary">
+                    <div class="card-body">
+                        <div id="uploader" onclick="selectFile()">
+                            <span class="btn btn-block btn-primary fileinput-button" style="width: 120px" >
+                                <i class="fas fa-plus"></i>
+                                <span>选择文件...</span>
+                                <input id="cfile" type="file" name="files[]" multiple>
+                            </span>
+
+                            <div class="myPanel">
+                                或者拖动文件到这里进行上传...
+                            </div>
+                        </div>
+
+                        <div style="position: absolute; left: 150px; top:20px" >
+                            <select class="form-control" id="category" name="attachment.categoryId" onchange="selectFile()">
+                                <option value="">上传至分类...</option>
+                                #for(item : categories ??)
+                                <option value="#(item.id ??)">#(item.title ??)</option>
+                                #end
+                            </select>
+                        </div>
+
+
+
+                        <div style="position: absolute; left: 300px; top:30px" >
+                            <a href="#(CPATH)/admin/attachment/category">分类管理</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+#end

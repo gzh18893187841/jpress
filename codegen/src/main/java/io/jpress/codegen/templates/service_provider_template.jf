@@ -1,0 +1,11 @@
+package #(serviceImplPackageName);
+
+import io.jboot.aop.annotation.Bean;
+import #(basePackage).#(tableMeta.modelName)Service;
+import #(modelPackage).#(tableMeta.modelName);
+import io.jpress.commons.service.JPressServiceBase;
+
+@Bean
+public class #(tableMeta.modelName)ServiceProvider extends JPressServiceBase<#(tableMeta.modelName)> implements #(tableMeta.modelName)Service {
+
+}

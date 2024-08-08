@@ -1,0 +1,1345 @@
+video, img {
+    max-width: 100%;
+}
+
+/*!
+* jp-menu commons
+*/
+.jpress-menu .arrow {
+    float: right;
+    line-height: 1.42857
+}
+
+*[dir=rtl] .jpress-menu .arrow {
+    float: left
+}
+
+.jpress-menu .glyphicon.arrow:before {
+    content: ""
+}
+
+.jpress-menu .jpress-active > a > .glyphicon.arrow:before {
+    content: ""
+}
+
+.jpress-menu .fa.arrow:before {
+    content: ""
+}
+
+.jpress-menu .jpress-active > a > .fa.arrow:before {
+    content: ""
+}
+
+.jpress-menu .ion.arrow:before {
+    content: ""
+}
+
+.jpress-menu .jpress-active > a > .ion.arrow:before {
+    content: ""
+}
+
+.jpress-menu .plus-times {
+    float: right
+}
+
+*[dir=rtl] .jpress-menu .plus-times {
+    float: left
+}
+
+.jpress-menu .fa.plus-times:before {
+    content: ""
+}
+
+.jpress-menu .jpress-active > a > .fa.plus-times {
+    transform: rotate(45deg)
+}
+
+.jpress-menu .plus-minus {
+    float: right
+}
+
+*[dir=rtl] .jpress-menu .plus-minus {
+    float: left
+}
+
+.jpress-menu .fa.plus-minus:before {
+    content: ""
+}
+
+.jpress-menu .jpress-active > a > .fa.plus-minus:before {
+    content: ""
+}
+
+.jpress-menu .jpress-collapse:not(.jpress-show) {
+    display: none
+}
+
+.jpress-menu .jpress-collapsing {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    transition-timing-function: ease;
+    transition-duration: .35s;
+    transition-property: height, visibility
+}
+
+.jpress-menu .has-arrow {
+    position: relative
+}
+
+.jpress-menu .has-arrow::after {
+    position: absolute;
+    content: "";
+    width: .3em;
+    height: .3em;
+    border-width: 1px 0 0 1px;
+    border-style: solid;
+    border-color: initial;
+    right: 0.4em;
+    transform: rotate(-45deg) translate(0, -50%);
+    transform-origin: top;
+    top: 50%;
+    transition: all .3s ease-out
+}
+
+*[dir=rtl] .jpress-menu .has-arrow::after {
+    right: auto;
+    left: 1em;
+    transform: rotate(135deg) translate(0, -50%)
+}
+
+.jpress-menu .jpress-active > .has-arrow::after, .jpress-menu .has-arrow[aria-expanded=true]::after {
+    transform: rotate(-135deg) translate(0, -50%)
+}
+
+*[dir=rtl] .jpress-menu .jpress-active > .has-arrow::after, *[dir=rtl] .jpress-menu .has-arrow[aria-expanded=true]::after {
+    transform: rotate(225deg) translate(0, -50%)
+}
+
+/*# sourceMappingURL=metisMenu.min.css.map */
+/*# end */
+
+
+/*!
+* jp-menu horizontal
+*/
+.jpress-nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+
+.jpress-nav .jpress-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.jpress-nav .jpress-menu > li {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.jpress-nav .jpress-menu a {
+    text-decoration: none;
+    position: relative;
+    display: block;
+    padding: 15px;
+    color: #212529;
+    outline-width: 0;
+    transition: all 0.3s ease-out;
+}
+
+.jpress-nav .jpress-menu a:hover,
+.jpress-nav .jpress-menu a:focus,
+.jpress-nav .jpress-menu a:active {
+    color: #0c63e4;
+    text-decoration: none;
+}
+
+.jpress-nav .jpress-menu .navbar-nav .navbar-nav a {
+    padding: 5px 15px;
+}
+
+
+@media (min-width: 992px) {
+    .jpress-nav .jpress-menu {
+        flex-direction: row;
+    }
+
+    .jpress-nav .jpress-menu > li {
+        flex-direction: column;
+    }
+
+    .jpress-nav .jpress-menu > li > ul {
+        position: absolute;
+        top: 100%;
+        min-width: 100%;
+        z-index: 1001;
+        background: #fff;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 20px -6px #ced4da !important;
+    }
+
+    .jpress-nav.is-hoverable .jpress-menu > li > ul {
+        height: auto !important;
+        min-width: 200px !important;
+    }
+
+    .jpress-nav.is-hoverable .jpress-menu > li:hover > ul {
+        display: block;
+    }
+
+    .jpress-nav.is-hoverable .jpress-menu > li:hover > a.has-arrow:after {
+        transform: rotate(-135deg);
+    }
+
+    .navbar-expand-lg .navbar-nav .navbar-nav {
+        -ms-flex-direction: column;
+        flex-direction: column;
+    }
+
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* jp-menu horizontal end */
+
+
+/*!
+* jp-menu vertical
+*/
+.jpress-sidebar-nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.jpress-sidebar-nav .jpress-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.jpress-sidebar-nav .jpress-menu li + li {
+    margin-top: 5px;
+}
+
+.jpress-sidebar-nav .jpress-menu li:first-child {
+    margin-top: 5px;
+}
+
+.jpress-sidebar-nav .jpress-menu li:last-child {
+    margin-bottom: 5px;
+}
+
+.jpress-sidebar-nav .jpress-menu > li {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.jpress-sidebar-nav .jpress-menu a {
+    position: relative;
+    display: block;
+    padding: 13px 15px;
+    color: #212529;
+    transition: all 0.3s ease-out;
+    text-decoration: none;
+}
+
+.jpress-sidebar-nav .jpress-menu ul a {
+    padding: 10px 15px 10px 30px;
+}
+
+.jpress-sidebar-nav .jpress-menu ul ul a {
+    padding: 10px 15px 10px 45px;
+}
+
+.jpress-sidebar-nav .jpress-menu a:hover,
+.jpress-sidebar-nav .jpress-menu a:focus,
+.jpress-sidebar-nav .jpress-menu a:active,
+.jpress-sidebar-nav .jpress-menu .jpress-active > a {
+    color: #0c63e4;
+    text-decoration: none;
+}
+
+.jpress-sidebar-nav .jpress-menu .jpress-active > a {
+    background: #e7f1ff;
+    border-radius: 3px;
+}
+
+/* jp-menu vertical end */
+
+
+/*!
+article comment start
+ */
+.comment-default-block {
+    background: #fff;
+    margin-top: 20px;
+}
+
+.comment-default-block input::-webkit-input-placeholder, .comment-default-block textarea::-webkit-input-placeholder {
+    color: #bbb;
+}
+
+.comment-default-block input:-moz-placeholder, .comment-default-block textarea:-moz-placeholder {
+    color: #bbb;
+}
+
+.comment-default-block input::-moz-placeholder, .comment-default-block textarea::-moz-placeholder {
+    color: #bbb;
+}
+
+.comment-default-block input:-ms-input-placeholder, .comment-default-block textarea:-ms-input-placeholder {
+    color: #bbb;
+}
+
+.comment-form {
+    margin-bottom: 20px;
+}
+
+.comment-form button {
+    float: right;
+    border: 1px solid transparent;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 0.22rem;
+    white-space: normal;
+    box-shadow: 0px 2px 10px -3px rgb(0 123 255) !important;
+}
+
+.comment-form button:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+
+.comment-form button:focus {
+    outline: none;
+}
+
+.comment-form > div > textarea {
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+    border: solid 1px #e9ecef;
+    border-radius: 0.22rem;
+    background-color: #f5f5f5;
+    color: #444444;
+}
+
+.comment-form > div > textarea:focus {
+    outline: none;
+    background-color: #f5f5f5bb;
+    border: solid 1px #ddd;
+}
+
+.comment-page-title {
+    padding: 20px 0 10px 0;
+}
+
+.comment-vcode {
+    float: left;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.comment-vcode .vcode-img {
+    height: 2.3rem;
+    margin-top: -3px;
+    cursor: pointer;
+}
+
+.comment-vcode input {
+    padding: 0 0.5rem;
+    height: 2.6rem;
+    border: solid 1px #e9ecef;
+    border-radius: 0.22rem;
+    background-color: #f5f5f5;
+    outline: none;
+}
+
+.comment-vcode input:focus {
+    background-color: #f5f5f5bb;
+    border: solid 1px #ddd;
+}
+
+.comment-item {
+    position: relative;
+    margin: 1.5rem 0;
+}
+
+.comment-secondary-panel {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+.comment-reply-btn {
+    float: right;
+}
+
+.comment-reply-btn a {
+    color: #4285f4;
+    font-size: 14px;
+}
+
+.comment-item .comment-item-portrait {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.comment-item-portrait img {
+    width: 50px;
+    height: 50px;
+}
+
+.comment-item .comment-item-content {
+    padding: 0 0 0 60px;
+    width: 100%;
+}
+
+.comment-item .comment-secondary-panel .comment-item-content {
+    padding: 0 20px;
+    width: 100%;
+}
+
+.comment-item-content-item .comment-time {
+    display: inline;
+    padding: 0 0.5rem 0 0;
+    font-size: 14px;
+    color: #999;
+}
+
+.comment-item-content-item div {
+    display: inline;
+}
+
+.comment-item-content-item .comment-author {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+.comment-item .comment-item-content .comment-item-content-main {
+    color: #666;
+    border-bottom: 1px solid #eee;
+    padding: 12px 0 1.5rem;
+}
+
+.comment-item .comment-item-secondary {
+    border: 1px solid #e5e5e5;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    margin: 0.5rem 0;
+    background-color: #fffffb;
+}
+
+.comment-secondary-panel > .triangle-icon {
+    color: #f5f5f5;
+    position: absolute;
+    top: -22px;
+    left: 50px;
+    font-size: 34px;
+}
+
+.comment-secondary-panel > .comment-item-content > .comment-item-content-main {
+    border-bottom: none;
+}
+
+/*article comment end*/
+
+/**
+产品详情页默认模块的相关 css
+ */
+.product-swipper {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.product-swipper-item ul a {
+    display: inline-block;
+}
+
+.product-swipper-item ul {
+    width: 100%;
+    display: flex;
+    list-style: none;
+    flex-shrink: 1;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.product-swipper-item ul li {
+    width: 16%;
+}
+
+.product-swipper-item ul li.active {
+    border: 2px solid #f38d00;
+    box-sizing: border-box;
+}
+
+.product-swipper-item ul li img {
+    max-width: 100%;
+    max-height: 80px;
+}
+
+
+.swiper-slide {
+    background-size: cover;
+    background-position: center;
+}
+
+.gallery-top {
+    width: 100%;
+    height: 400px;
+}
+
+.gallery-thumbs {
+    height: 70px;
+    width: 100%;
+    margin-top: 1rem;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.gallery-thumbs .swiper-slide {
+    width: 20%;
+    height: 100%;
+}
+
+.gallery-thumbs .swiper-slide-thumb-active {
+    border: #f38d00 2px solid;
+}
+
+.product-title {
+    padding: 0;
+    font-size: 1.8rem;
+    font-weight: 500;
+
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+}
+
+.product-info span {
+
+    padding: 0;
+    font-size: 14px;
+    color: #999;
+}
+
+.product-info div {
+    margin: 0 10px 0 0;
+}
+
+.product-price {
+    margin: 20px 0;
+    font-size: 28px;
+    color: #333;
+    font-weight: 600;
+}
+
+.product-usp {
+    font-size: 14px;
+    color: #666;
+    width: 100%;
+}
+
+.product-specs ul a {
+    display: inline-block;
+}
+
+.product-specs ul {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    flex-shrink: 1;
+    padding: 0;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.product-specs ul li {
+    padding: 2px 10px;
+    margin-bottom: 4px;
+    margin-right: 4px;
+    text-align: center;
+    border: 2px solid #ccc;
+    cursor: pointer;
+
+}
+
+.product-specs ul li.active {
+    border: 2px solid #f38d00;
+    box-sizing: border-box;
+    color: #f38d00;
+}
+
+.product-btn {
+    margin-top: 40px;
+}
+
+.product-btn a {
+    padding: 10px 20px;
+    margin-right: 10px;
+}
+
+.product-btn-buy {
+    background-color: #f38d00;
+    border: 1px solid #f38d00;
+    color: #fff;
+}
+
+a.product-btn-buy:hover {
+    color: #fff;
+}
+
+.product-btn-cart {
+    color: #E5511D;
+    border-color: #F0CAB6;
+    background: #FFE4D0;
+}
+
+a.product-btn-cart:hover {
+    color: #E5511D;
+}
+
+.product-btn-star {
+    margin-top: 1rem;
+}
+
+.product-btn-star a {
+    color: #666;
+    font-size: 14px;
+}
+
+.product-tag {
+    margin: 20px 0 0 0;
+    padding: 20px 0 0 0;
+    border-top: 1px solid #eee;
+}
+
+.product-tag a {
+    margin-right: 10px;
+}
+
+.product-tag p {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+/**
+    产品详情页默认模块的相关 end
+ */
+.navbar-dark .navbar-nav .navbar-nav .nav-link {
+    color: #333;
+}
+
+/**
+搜索引擎高亮关键字
+ */
+.search-highlight {
+    color: red;
+}
+
+.btn-form-submit {
+    margin-left: 110px;
+}
+/*login*/
+.login-content{
+    background-color:#fff;
+    width:50%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    border-radius:12px;
+    height: 60vh;
+    min-height:450px;
+    overflow:hidden;
+}
+
+.login-logo2{
+    padding:20px 0 0 30px;
+    font-size:36px;
+    font-weight:500;
+}
+.login-logo2 span{
+    font-size:20px;
+    font-weight:400;
+    vertical-align:text-top;
+
+}
+.login-bottom{
+    text-align:center;
+    padding-bottom:20px;
+}
+.login-bottom p{
+    line-height:1.5em;
+    margin-bottom:0;
+    font-size:14px;
+
+}
+.login-left{
+    width:30%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction:column;
+    justify-content:space-between;
+    color:#fff;
+}
+.login-right{
+    width:70%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.login-box {
+    width: 60%;
+    margin: 0 auto;
+}
+.login-box .card{
+    box-shadow:none;
+}
+.form-group {
+    text-align: left;
+}
+.login-input-content{
+    position:relative;
+}
+.login-input-content .login-icon{
+    position:absolute;
+    left:12px;
+    top:7px;
+}
+.login-input-content .form-control{
+    text-indent:20px;
+}
+@media (max-width: 992px) {
+    .login-content{
+        width:70%;
+        }
+}
+@media (max-width: 768px) {
+    .login-content{
+        width:80%;
+        }
+}
+@media (max-width: 500px) {
+    .login-left{
+        display:none;
+        }
+    .login-right{
+        width:100%;
+        }
+}
+
+/*jpressform表单代码*/
+*, ::after, ::before {
+    box-sizing: border-box;
+    margin:0;
+    padding:0;
+}
+.width-100{
+    width:100%;
+}
+.mb-15{
+    margin-bottom:15px;
+}
+.pd-30{
+    padding:30px;
+}
+.pt-30{
+    padding-top:30px !important;
+}
+.pb-30{
+    padding-bottom:30px !important;
+}
+.pb-60{
+    padding-bottom:60px;
+}
+.pdlr-15{
+    padding:0 15px;
+}
+.bg-white{
+    background-color: #fff;
+}
+.jpress-form-item {
+    margin-bottom: 25px;
+    clear: both;
+    *zoom: 1;
+}
+.jpress-label-left {
+    position: relative;
+    float: left;
+    display: block;
+    padding: 9px 10px;
+    width: 90px;
+    font-weight: 400;
+    line-height: 1.5;
+    font-size:14px;
+    text-align: right;
+}
+
+.jpress-input-block{
+    margin-left: 110px;
+    min-height: 36px;
+}
+.jpress-form-control{
+    display: block;
+    width: 100%;
+    height: 38px;
+    line-height: 1.3;
+    padding:10px 10px;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 0 0 transparent;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.jpress-form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: inset 0 0 0 transparent;
+}
+
+.jpress-form-check {
+    position: relative;
+    display: block;
+    padding-left: 12px;
+    margin-bottom:12px;
+}
+.jpress-check-inline {
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-left: 0;
+    margin-right: 0.75rem;
+}
+.jpress-check-input {
+    position: absolute;
+    margin-top: 4px;
+    margin-left: -1.25rem;
+}
+.jpress-check-label {
+    font-size: 14px;
+    margin-bottom: 0;
+}
+/*textarea框*/
+textarea.jpress-form-control {
+    height: auto;
+}
+/*上传*/
+.jpress-custom-file{
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    margin-bottom: 0;
+}
+.jpress-file-input {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 38px;
+    padding-left: 10px;
+    margin-bottom: 0;
+}
+.jpress-file-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: 38px;
+    padding: 0 0.75rem;
+    overflow: hidden;
+    font-weight: 400;
+    line-height: 38px;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-shadow: none;
+}
+.jpress-file-label::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    display: block;
+    height: 38px;
+    padding: 0 0.75rem;
+    line-height: 38px;
+    color: #495057;
+    content: "Browse";
+    background-color: #e9ecef;
+    border-left: inherit;
+    border-radius: 0 0.25rem 0.25rem 0;
+}
+/*下拉框*/
+.jpress-custom-select {
+    display: inline-block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: middle;
+    background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") right .75rem center/8px 10px no-repeat;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 8%);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.jpress-custom-select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 8%);
+}
+
+/*switch开关*/
+.jpress-custom-switch {
+    position: relative;
+    z-index: 1;
+    display: block;
+    min-height: 1.5rem;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+}
+.jpress-custom-input {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 1rem;
+    height: 1.25rem;
+    opacity: 0;
+}
+.jpress-custom-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}
+.jpress-custom-label::before {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 36px;
+    height: 18px;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: #adb5bd solid 1px;
+}
+.jpress-custom-switch .jpress-custom-label::before {
+    left:2px;
+    top:8px;
+    width: 36px;
+    pointer-events: all;
+    border-radius: 10px;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.jpress-custom-input:checked~.jpress-custom-label::before {
+    color: #fff;
+    border-color: #007bff;
+    background-color: #007bff;
+}
+.jpress-custom-input:focus~.jpress-custom-label::before {
+    box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+}
+.jpress-custom-input:not(:disabled):active~.jpress-custom-label::before {
+    color: #fff;
+    background-color: #b3d7ff;
+    border-color: #b3d7ff;
+}
+.jpress-custom-label::after {
+    position: absolute;
+    top: 4px;
+    left: 2px;
+    display: block;
+    width: 12px;
+    height: 12px;
+    content: "";
+    background: 50%/50% 50% no-repeat;
+}
+.jpress-custom-switch .jpress-custom-label::after {
+    top: 12px;
+    left: 8px;
+    width: 12px;
+    height: 12px;
+    background-color: #adb5bd;
+    border-radius: 0.5rem;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-transform .15s ease-in-out;
+    transition: transform .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: transform .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-transform .15s ease-in-out;
+}
+.jpress-custom-switch .jpress-custom-input:checked~.jpress-custom-label::after {
+    background-color: #dee2e6;
+    -webkit-transform: translateX(0.75rem);
+    transform: translateX(0.75rem);
+}
+.jpress-form-item blockquote {
+    margin-bottom: 10px;
+    padding: 15px;
+    line-height: 1.6;
+    border-left: 5px solid #007bff;
+    border-radius: 0 2px 2px 0;
+    background-color: #fafafa;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+/*div*/
+.jpress-div{
+    min-height: 50px;
+    border: 1px dashed #ccc;
+    background: #f1f1f1;
+    padding: 5px 5px 0 5px;
+}
+/*hr*/
+hr{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+/*栅格布局*/
+
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.no-gutters > .col,
+.no-gutters > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, .col,
+.col-auto, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm,
+.col-sm-auto, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-md,
+.col-md-auto, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg,
+.col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl,
+.col-xl-auto {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col {
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    max-width: 100%;
+}
+.col-auto {
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+}
+
+.col-1 {
+    -ms-flex: 0 0 8.333333%;
+    flex: 0 0 8.333333%;
+    max-width: 8.333333%;
+}
+
+.col-2 {
+    -ms-flex: 0 0 16.666667%;
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+
+.col-3 {
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.col-4 {
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+
+.col-5 {
+    -ms-flex: 0 0 41.666667%;
+    flex: 0 0 41.666667%;
+    max-width: 41.666667%;
+}
+
+.col-6 {
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.col-7 {
+    -ms-flex: 0 0 58.333333%;
+    flex: 0 0 58.333333%;
+    max-width: 58.333333%;
+}
+
+.col-8 {
+    -ms-flex: 0 0 66.666667%;
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+}
+
+.col-9 {
+    -ms-flex: 0 0 75%;
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+
+.col-10 {
+    -ms-flex: 0 0 83.333333%;
+    flex: 0 0 83.333333%;
+    max-width: 83.333333%;
+}
+
+.col-11 {
+    -ms-flex: 0 0 91.666667%;
+    flex: 0 0 91.666667%;
+    max-width: 91.666667%;
+}
+
+.col-12 {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+/*按钮*/
+.btn-form-submit{
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 6px 30px;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-form-submit {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.btn-form-submit.focus, .btn-form-submit:focus {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+/*中心内容*/
+.bg-gray{
+    background-color:#efefef;
+}
+/* 超小设备 (手机, 600px 以下屏幕设备) */
+@media only screen and (max-width: 640px) {
+    .centerContent{
+        width:100%;
+        background-color:#fff;
+    }
+}
+/* 小设备 (平板电脑和大型手机，600 像素及以上) */
+@media only screen and (min-width: 640px) {
+    .centerContent{
+        width:100%;
+        background-color:#fff;
+    }
+}
+/* 中型设备（平板电脑，768 像素及以上） */
+@media only screen and (min-width: 768px) {
+    .centerContent{
+        width:96%;
+        margin:10px auto;
+        background-color:#fff;
+    }
+}
+/* 大型设备（笔记本电脑/台式机，992 像素及以上） */
+@media only screen and (min-width: 992px) {
+    .centerContent{
+        width:829px;
+        margin:10px auto;
+        background-color:#fff;
+    }
+}
+.jpress-form-header{
+    padding-bottom:20px;
+    border-bottom:3px solid #007bff;
+}
+.jpress-form-title{
+    font-size:18px;
+    margin-bottom:20px;
+}
+.jpress-form-desc{
+    font-size: 16px;
+}
+
+
+/*上传图片*/
+.fileContainer {
+    display: inline-block;
+    vertical-align: middle;
+}
+.jpress-upload-btn,
+.jpress-upload-item {
+    position: relative;
+    display: inline-block;
+    color: #ccc;
+    height: 126px;
+    width: 126px;
+    overflow: hidden;
+    border: 1px dashed #d8d8d8;
+    margin-top: 10px;
+    background-color: #f7f8fa;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.jpress-upload-btn {
+    margin-right: 5px;
+}
+
+.jpress-upload-item {
+    margin: 10px 5px 0;
+}
+
+.jpress-upload-item img {
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.jpress-upload-btn p {
+    font-size: 14px;
+}
+
+.jpress-upload-btn .jpress-icon {
+    font-size: 42px;
+    font-style: normal;
+    font-weight: 200;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.jpress-upload-file {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    display: inline-block;
+    height: 120px;
+    width: 120px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-delete {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 18px;
+}
+
+.file-delete i {
+    padding: 2px 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border-radius: 2px;
+}
+
+.jpress-images-name {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 32px;
+    padding: 0 12px;
+    line-height: 32px;
+    font-size: 14px;
+    box-sizing: border-box;
+    color: #fff;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+button:focus{
+    outline:none;
+}
+
+.toast-center-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.jpress-form-card {
+    display: none;
+}

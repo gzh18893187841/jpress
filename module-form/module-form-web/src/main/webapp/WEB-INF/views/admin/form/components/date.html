@@ -1,0 +1,18 @@
+<div class="jpress-form-item">
+    <div class="jpress-form-group clearfix">
+        <div class="jpress-label-left">
+            <label for="#(id ??)">#(label ??)</label>
+        </div>
+        <div class="jpress-input-block">
+            <input
+                    type="date"
+                    class="jpress-form-control"
+                    id="#(id ??)"
+                    name="#(name ??)"
+                    placeholder="#(placeholder ??)"
+                    value="#date(value,'yyyy-MM-dd')"
+                    #if(!withEdit) disabled #end
+            />
+        </div>
+    </div>
+</div>

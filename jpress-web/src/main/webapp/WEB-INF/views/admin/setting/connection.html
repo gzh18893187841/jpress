@@ -1,0 +1,182 @@
+#@layout()
+
+#define script()
+<script>
+
+    $("#testbtn").on("click", function () {
+        var email = $("#testemail").val();
+        if (!email || email == "") {
+            alert("请输入测试邮件");
+            $("#testemail").focus();
+            return;
+        }
+        ajaxGet("#(CPATH)/admin/setting/testEmail?email=" + email, function () {
+            alert("邮件发送成功，请查收");
+        }, function (data) {
+            alert(data.message);
+        })
+    })
+
+</script>
+#end
+
+#define content()
+
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <h1>
+                                通信设置
+                                <small data-toggle="tooltip" title="" data-placement="right"
+                                       data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                                <small> 首页 / 系统 / 通信设置</small>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+
+        <div class="container-fluid">
+                <div class="card card-outline card-primary">
+
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form class=" form-setting" autocomplete="off"
+                          id="optionForm">
+                        <div class="card-body">
+
+                            <h4 class="form-header">邮件</h4>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">启用</label>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" class="switchery" data-for="connection_email_enable"
+                                           #checkedIf(option("connection_email_enable"))>
+                                    <input type="hidden" id="connection_email_enable" name="connection_email_enable">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">SMTP地址</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="例如：smtp.qq.com"
+                                           name="connection_email_smtp"
+                                           value="#option('connection_email_smtp')">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">用户名</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="邮箱账号..."
+                                           name="connection_email_account"
+                                           value="#option('connection_email_account')">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">密码</label>
+                                <div class="col-sm-6">
+                                    <input type="password" class="form-control" placeholder="及密码"
+                                           name="connection_email_password"
+                                           value="#option('connection_email_password')">
+                                    <p class="text-muted"> 注意：QQ 邮箱的密码不是 QQ 密码，需要进入邮箱，在设置 -> 账户 里开启 SMTP，并生成授权密码。 </p>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">使用SSL</label>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" class="switchery" data-for="connection_email_ssl_enable"
+                                           #checkedIf(option("connection_email_ssl_enable"))>
+                                    <input type="hidden" id="connection_email_ssl_enable"
+                                           name="connection_email_ssl_enable">
+                                    <p class="text-muted"> QQ邮箱，Gmail邮箱，163邮箱等请开启。 </p>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">收件测试</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="请输入接收邮件账号..." id="testemail">
+                                    <button type="button" class="btn btn-primary btn-flat" style="margin-top: 5px"
+                                            id="testbtn">发送测试邮件
+                                    </button>
+                                </div>
+                            </div>
+
+
+                            <h4 class="form-header">手机短信</h4>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">启用</label>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" class="switchery" data-for="connection_sms_enable"
+                                           #checkedIf(option("connection_sms_enable"))>
+                                    <input type="hidden" id="connection_sms_enable" name="connection_sms_enable">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">短信服务商</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="connection_sms_type">
+                                        <option value="aliyun" #selectedIf(option(
+                                        'connection_sms_type') == 'aliyun') >阿里云</option>
+                                        <option value="qcloud" #selectedIf(option(
+                                        'connection_sms_type') == 'qcloud') >腾讯云</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">App Id</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="从服务商获取的appId ..."
+                                           name="connection_sms_appid"
+                                           value="#option('connection_sms_appid')">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">App Secret</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="及appSecret"
+                                           name="connection_sms_appsecret"
+                                           value="#option('connection_sms_appsecret')">
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <div class="offset-sm-2 col-sm-10 submit-block">
+                                <div class="card-submit">
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-footer -->
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+#end

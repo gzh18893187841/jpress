@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>等待验证</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="#(CPATH)/static/adminlte/css/adminlte.min.css">
+    <link rel="stylesheet" href="#(CPATH)/static/components/aj-captcha/css/verify.css"/>
+
+    <!--[if lt IE 9]>
+    <script src="#(CPATH)/static/html5shiv/html5shiv.min.js"></script>
+    <script src="#(CPATH)/static/respond/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .login-page {
+            background-image: url("#(CDN)#(CPATH)/static/commons/img/bg.png");
+            background-size: cover;
+        }
+
+        .login-box {
+            margin-top: 100px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+
+    </style>
+
+    <script>
+        // window.onload = function (){
+        //     var token = $("#token").val();
+        //     var isEmail = $("#isEmail").val();
+        //     setTimeout(function (){
+        //         window.location.href = "/user/resetPwd?token="+token+"&isEmail="+isEmail;
+        //     },2000)
+        // }
+    </script>
+
+
+</head>
+<body class="hold-transition login-page">
+
+<div class="wrapper">
+
+    <div class="login-box">
+        <div class="login-logo" style="color: #FFF">
+            等待验证
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+
+                <form action="" method="post" class="autoAjaxSubmit" data-ok-href=""
+                      data-fail-function="">
+                    <label>已发送消息到您输入的账号，请通过消息的链接地址进入，进行密码重置</label>
+                    <label><a href="#(CPATH)/user/login">返回登录页</a></label>
+                    <input type="hidden"  name="token" id="token" value="#(token ??)" />
+                    <input type="hidden" name="email" id="email" value="#(email ??)" />
+                    <input type="hidden" name="isEmail" id="isEmail" value="#(isEmail ??)" />
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.login-box -->
+
+</div>
+
+<script src="#(CPATH)/static/components/jquery/jquery.min.js"></script>
+<script src="#(CPATH)/static/components/jquery/jquery.form.min.js"></script>
+<script src="#(CPATH)/static/components/jquery-validation/jquery.validate.min.js"></script>
+<script src="#(CPATH)/static/components/jquery-validation/additional-methods.min.js"></script>
+<script src="#(CPATH)/static/components/jquery-validation/localization/messages_zh.min.js"></script>
+<script src="#(CPATH)/static/components/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script src="#(CPATH)/static/admin/js/jpressutils.js"></script>
+<script src="#(CPATH)/static/admin/js/jpressadmin.js"></script>
+
+
+</body>
+
+</html>
+
+

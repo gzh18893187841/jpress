@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>预览页面</title>
+    <link rel="shortcut icon" href="#(CPATH)/static/commons/img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="#(CPATH)/static/components/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="#(CPATH)/static/components/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="#(CPATH)/static/components/switchery/switchery.min.css">
+    <link rel="stylesheet" href="#(CPATH)/static/components/toastr/toastr.min.css">
+    <link rel="stylesheet" href="#(CPATH)/static/adminlte/css/adminlte.min.css">
+    <link rel="stylesheet" href="#(CPATH)/static/admin/css/jpressadmin.css">
+    <link rel="stylesheet" href="#(CPATH)/static/admin/css/preview.css">
+
+    <!--[if lt IE 9]>
+    <script src="#(CPATH)/static/components/html5shiv/html5shiv.min.js"></script>
+    <script src="#(CPATH)/static/components/respond/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        html{
+            overflow-y: scroll; //这是为了兼容ie8，不支持:root, vw
+        }
+        html::-webkit-scrollbar {
+            width: 0;
+        }
+        :root {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        body,html,.height-100{
+            height:100% !important;
+            background-color:#666;
+
+        }
+        body::-webkit-scrollbar {
+            width: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="height-100 bg-grayer">
+    <div class="preview-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <ul class="preview-media mb-0 clearfix">
+                <li>
+                    <a href="#" data-device="desktop" class="active" ><i class="bi bi-laptop"></i></a>
+                </li>
+                <li>
+                    <a href="#" data-device="ipad-landscape" ><i class="bi bi-phone-landscape"></i></a>
+                    <a href="#" data-device="ipad-portrait" class="inactive"><i class="bi bi-phone"></i></a>
+                </li>
+                <li>
+                    <a href="#" data-device="iphone-portrait" ><i class="bi bi-phone font-size20"></i></a>
+                    <a href="#" data-device="iphone-landscape" class="inactive"><i class="bi bi-phone-landscape font-size20"></i></a>
+                </li>
+            </ul>
+            <div class="preview-close">
+                <!--<button class="btn btn-parimary rounded-0">立即购买</button>-->
+                <span class="pl-2 pr-2 js-close"><i class="bi bi-x"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Iframe Container -->
+    <div id="iframe-container" class="bg-dark desktop">
+        <div class="inner">
+            <iframe width="100%" height="100%" class="iframe-link"
+                    src="#para('url')" id="iframeId"></iframe>
+        </div><!--/ inner -->
+    </div><!--/ Iframe Container -->
+</div>
+<script src="#(CPATH)/static/components/jquery/jquery.min.js"></script>
+<script src="#(CPATH)/static/components/jquery/jquery.form.min.js"></script>
+<script src="#(CPATH)/static/components/jquery-validation/jquery.validate.min.js"></script>
+<script src="#(CPATH)/static/components/jquery-validation/additional-methods.min.js"></script>
+<script src="#(CPATH)/static/components/jquery-validation/localization/messages_zh.min.js"></script>
+<script src="#(CPATH)/static/components/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script src="#(CPATH)/static/components/fastclick/fastclick.js"></script>
+<script src="#(CPATH)/static/components/layer/layer.js"></script>
+<script src="#(CPATH)/static/components/switchery/switchery.min.js"></script>
+<script src="#(CPATH)/static/components/toastr/toastr.min.js"></script>
+<script src="#(CPATH)/static/components/air-datepicker/js/datepicker.min.js"></script>
+<script src="#(CPATH)/static/components/air-datepicker/js/i18n/datepicker.zh.js"></script>
+<script src="#(CPATH)/static/components/sweetalert2/sweetalert2.all.min.js"></script>
+<script src="#(CPATH)/static/adminlte/js/adminlte.min.js"></script>
+<script src="#(CPATH)/static/admin/js/jpressutils.js"></script>
+<script src="#(CPATH)/static/admin/js/jpressadmin.js"></script>
+<script>
+    document.getElementById('iframeId').height = "100%";
+    $(function(){
+        $('.preview-media').on('click', 'a', function(e) {
+            e.preventDefault();
+            var $this = $(this),
+                device = $this.data('device');
+            $this.closest('.preview-media').find('a').removeClass('active');
+            $this.removeClass('inactive').addClass('active').siblings().addClass('inactive');
+            preview_device(device);
+        });
+
+        // 关闭头部信息
+        $(".js-close").click(function(){
+            $(".preview-header").hide();
+            $("#iframe-container").css({top:0,height:"100%"})
+        })
+    })
+    function preview_device(device) {
+        var iframeContainer = $('#iframe-container');
+        iframeContainer.removeClass().addClass(device);
+
+        var screenWidth = $(window).width(),
+            screenHeight = $(window).height(),
+            marginTop = 0,
+            marginLeft = 0;
+
+        if (device == 'ipad-portrait') {
+            marginTop = (screenHeight - 1385) < 0 ? -30 : (screenHeight - 1335) / 2 - 30;
+            marginLeft = (screenWidth - 964) < 0 ? 0 : (screenWidth - 964) / 2;
+        } else if (device == 'ipad-landscape') {
+            marginTop = (screenHeight - 1014) < 0 ? 0 : (screenHeight - 964) / 2 - 20;
+            marginLeft = (screenWidth - 1335) < 0 ? 0 : (screenWidth - 1335) / 2;
+        } else if (device == 'iphone-landscape') {
+            marginTop = (screenHeight - 444) < 0 ? 0 : (screenHeight - 394) / 2 - 30;
+            marginLeft = (screenWidth - 815) < 0 ? 0 : (screenWidth - 815) / 2;
+        } else if (device == 'iphone-portrait') {
+            marginTop = (screenHeight - 865) < 0 ? 0 : (screenHeight - 815) / 2 - 30;
+            marginLeft = (screenWidth - 394) < 0 ? 0 : (screenWidth - 394) / 2;
+        }
+        iframeContainer.css({
+            'margin-top': marginTop,
+            'margin-left': marginLeft
+        });
+    }
+</script>
+</body>
+</html>

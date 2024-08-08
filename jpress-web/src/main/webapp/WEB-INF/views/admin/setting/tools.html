@@ -1,0 +1,65 @@
+#@layout()
+
+#define script()
+<script>
+
+</script>
+#end
+
+#define css()
+<style>
+    .inner {
+        min-height: 100px;
+    }
+    .small-box:hover .icon {
+        font-size: 90px;
+    }
+</style>
+#end
+#define content()
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <h1>
+                                小工具箱
+                                <small data-toggle="tooltip" title="" data-placement="right"
+                                       data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                                <small> 首页 / 系统 / 小工具箱</small>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+
+        <div class="container-fluid">
+                <div class="card card-outline card-primary">
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            #for(moduleHtml : moduleIncludes)
+                                #render(moduleHtml)
+                            #end
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+#end

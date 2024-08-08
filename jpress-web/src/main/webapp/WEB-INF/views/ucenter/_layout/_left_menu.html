@@ -1,0 +1,45 @@
+
+
+<aside class="sidebar-light-primary" style="margin-top: -0.75rem">
+    <div class="sidebar">
+
+        <nav class="mt-2" style="padding: 10px 0">
+            <ul class="nav nav-pills nav-sidebar flex-column text-sm" data-widget="treeview" role="menu"
+                data-accordion="false" id="sidebar-menu">
+
+
+                <li class="nav-item" >
+                    <a href="#(CPATH)/ucenter/index" class="nav-link">
+                        <i class="fas fa-home"></i><p>首页</p>
+                    </a>
+                </li>
+
+
+                <li class="nav-header">我的评论</li>
+
+                #for(item : ucenterCommentMenus)
+                <li class="nav-item" >
+                    <a href="#(item.url ??)" class="nav-link">
+                        #(item.icon ?? '<i class="fas fa-smile"></i>')<p>#(item.text ??)</p>
+                    </a>
+                </li>
+                #end
+
+
+
+                <li class="nav-header">个人信息</li>
+                #for(item : ucenterPersonalMenus)
+                <li class="nav-item" >
+                    <a href="#(item.url ??)" class="nav-link">
+                        #(item.icon ?? '<i class="fas fa-smile"></i>')<p>#(item.text ??)</p>
+                    </a>
+                </li>
+                #end
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+<!-- ./ sidebar -->

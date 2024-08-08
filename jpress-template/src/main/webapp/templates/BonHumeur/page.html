@@ -1,0 +1,24 @@
+#include("./layout.html")
+#@layout(true)
+
+#define css()
+<link href="#(CPATH)/static/components/ckeditor5/ck-content.css" rel="stylesheet">
+#end
+
+
+#define content()
+<div class="bh-main-body">
+
+    #include("header.html")
+    <div class="bh-article-content">
+
+        <h2 class="bh-article-title">
+            #(page.title ??)
+        </h2>
+        <div class="bh-article ck-content">
+            #(page.content ??)
+        </div>
+
+    </div>
+</div>
+#end

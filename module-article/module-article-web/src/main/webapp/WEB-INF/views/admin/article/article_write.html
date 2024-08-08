@@ -1,0 +1,968 @@
+#@layout()
+#define script()
+<script src="#(CPATH)/static/components/vditor/dist/index.min.js"></script>
+<script src="#(CPATH)/static/components/ckeditor5/ckeditor.js"></script>
+<script src="#(CPATH)/static/components/editable/js/bootstrap-editable.min.js"></script>
+<script src="#(CPATH)/static/components/selectize/selectize.min.js"></script>
+<script src="#(CPATH)/static/components/highlight/highlight.pack.js"></script>
+
+<script>
+
+    var $select = $('.article-tags').selectize({
+        plugins: ['remove_button'],
+        delimiter: ',',
+        persist: false,
+        addPrecedence: true,
+        create: true,
+        render: {
+            option_create: function (data, escape) {
+                return '<div class="create" style="padding-left: 5px"> 添加标签：<strong style="color: #DD1144">' + escape(data.input) + '</strong></div>';
+            }
+        }
+    });
+
+    $(".newTag").each(function () {
+        $(this).on('click', function () {
+            $select[0].selectize.createItem($(this).text());
+        })
+    });
+
+    $(".tflag").each(function () {
+        $(this).on('click', function () {
+            $("#flag").val($(this).text());
+        })
+    });
+
+    $(".submitBtn").on("click", function () {
+        $("#articleStatus").val($(this).attr("data-status"));
+        doSubmit()
+    });
+
+
+    // 全局函数,在CKEditor ctrl + s 快捷键处用到,保留article的status
+    window.doSubmit = function (openPreview) {
+        if (window.currentCKEditor) {
+            $("#content").val(window.currentCKEditor.getData());
+        } else if (window.currentVditor) {
+            $("#content").val(window.currentVditor.getHTML());
+        }
+
+        var articleStatus = $("#articleStatus").val();
+        if (articleStatus == 'normal') {
+            $('#publisher').attr('disabled', 'disabled');
+            $('#publisher i').addClass('fa-spin');
+        }
+
+        ajaxSubmit("#form", function (data) {
+            if (articleStatus == 'normal') {
+                showMessage("文章发布成功！","#(CPATH)/admin/article/list")
+            } else {
+                $("#articleId").attr("value", data.id);
+                window.history.replaceState({}, '', `#(CPATH)/admin/article/write/` + data.id)
+                toastr.success('文章保存成功。')
+
+                //设置预览路劲
+                $("#preview").attr("href", "#(CPATH)/admin/preview?url=#(CPATH)/admin/article/preview/" + data.id);
+
+                //如果是通过预览按钮 来保存 那么打开预览窗口
+                if (openPreview === true) {
+                    window.open("#(CPATH)/admin/preview?url=#(CPATH)/admin/article/preview/" + data.id);
+                }
+            }
+        }, function (data) {
+            $('#publisher').removeAttr('disabled');
+            $('#publisher i').removeClass('fa-spin');
+            showErrorMessage(data.message);
+        });
+    };
+
+
+    //预览点击事件
+    function previewArticle($this) {
+
+        if (!$this.href) {
+            doSubmit(true)
+        }
+
+    }
+
+    setSaveHotKeyFunction(doSubmit);
+
+    /**
+     * 缩略图，移除图片的按钮功能
+     */
+    $("#removeThumbnail").on("click", function () {
+        $("#thumbnail").attr("src", "#(CPATH)/static/commons/img/nothumbnail.jpg");
+        $("#articleThumbnail").val("");
+    })
+
+
+    /**
+     * 切换编辑器的按钮功能
+     * @param id
+     */
+    function doChangeEditor(id) {
+        if (confirm('确定要切换编辑器吗？切换可能出现前台渲染内容缺失的问题，且只对未发布文章有效')) {
+            var changeMode = editMode == "html" ? "markdown" : "html";
+            if (id && id !== '0') {
+                ajaxGet('#(CPATH)/admin/article/doChangeEditMode?id=' + id + "&mode=" + changeMode);
+            } else {
+                ajaxGet('#(CPATH)/commons/changeEditor/' + changeMode);
+            }
+        }
+    }
+
+    //通过编辑模式来决定初始化不同的编辑器
+    var editMode = "#(editMode ?? 'html')";
+    if (editMode === 'html') {
+        initCkEdtior('#editor');
+    } else {
+        initVdtior('editor');
+    }
+
+
+    $(".chooseAttachment").on("click", function () {
+        var $this = $(this);
+        layer.open({
+            type: 2,
+            title: '选择附件',
+            anim: 2,
+            shadeClose: true,
+            shade: 0.3,
+            area: ['90%', '90%'],
+            content: jpress.cpath + '/admin/attachment/browse?uititle=附件',
+            end: function () {
+                if (layer.data.src != null) {
+
+                    var src = jpress.cpath + layer.data.src;
+                    //video ".mp4", ".avi", ".wmv", ".mpeg", ".mov", ".mkv", ".flv", ".rmvb", ".rm", ".3gp", ".ts", ".vob", ".m3u8"
+                    if (src.endsWith(".mp4") || src.endsWith(".avi") || src.endsWith(".wmv") || src.endsWith(".mpeg") || src.endsWith(".mov")
+                        || src.endsWith(".mkv") || src.endsWith(".flv") || src.endsWith(".rmvb") || src.endsWith(".rm") || src.endsWith(".3gp") ||
+                        src.endsWith(".ts") || src.endsWith(".vob") || src.endsWith(".m3u8")) {
+
+                        if (typeof currentCKEditor != 'undefined' && currentCKEditor) {
+                            var video = document.createElement('video') // 添加的内容可以自定义， 这里以添加图片为例
+                            video.setAttribute('src', src)
+                            video.setAttribute('style', 'max-width:100%;')
+                            video.setAttribute('controls', 'controls')
+
+                            insertHtmlToEditor(video.outerHTML);
+                        } else if (currentVditor) {
+                            currentVditor.insertValue('附件：[' + layer.data.title + '](' + src + ')')
+                        }
+                    }
+
+                    //image ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp"
+                    else if (src.endsWith(".jpg") || src.endsWith(".jpeg") || src.endsWith(".png")
+                        || src.endsWith(".bmp") || src.endsWith(".gif") || src.endsWith(".webp")) {
+
+                        if (typeof currentCKEditor != 'undefined' && currentCKEditor) {
+                            var img = document.createElement('img') // 添加的内容可以自定义， 这里以添加图片为例
+                            img.setAttribute('src', src)
+                            insertHtmlToEditor(img.outerHTML);
+                        } else if (currentVditor) {
+                            //![图片alt](图片地址 ''图片title'')
+                            currentVditor.insertValue('![' + layer.data.title + '](' + src + ')')
+                        }
+                    }
+                    // other file
+                    else {
+                        if (typeof currentCKEditor != 'undefined' && currentCKEditor) {
+                            var a = document.createElement('a') // 添加的内容可以自定义， 这里以添加图片为例
+                            a.setAttribute('href', src)
+                            a.setAttribute("target", "_blank")
+                            a.innerHTML = layer.data.title;
+                            insertHtmlToEditor('附件：' + a.outerHTML);
+                        } else if (currentVditor) {
+                            currentVditor.insertValue('附件：[' + layer.data.title + '](' + src + ')')
+                        }
+                    }
+                }
+            }
+        });
+    })
+
+
+    function insertHtmlToEditor(html) {
+        const viewFragment = currentCKEditor.data.processor.toView(html);
+        const modelFragment = currentCKEditor.data.toModel(viewFragment);
+        currentCKEditor.model.insertContent(modelFragment, currentCKEditor.model.document.selection);
+    }
+
+    $(function () {
+        // 设置按钮
+        $("#rightSwitch").click(function () {
+            $(this).toggleClass('switch-btn');
+            $(".rightPanel").toggle();
+            $(".leftPanel").toggleClass("col-lg-12", "col-lg-3");
+        });
+        // 设置编辑器的高度
+        var headerHeight = $(".article-header ").innerHeight();
+        var mainHeight = $(".main-header").innerHeight();
+        var editorHeight = $(window).height() - parseFloat(headerHeight) - parseFloat(mainHeight);
+        $('#editor').css({
+            "min-height": editorHeight
+        })
+    })
+
+
+    $("#article-title").each(function () {
+        this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+    }).on("input", function () {
+        this.style.height = 0;
+        this.style.height = (this.scrollHeight) + "px";
+    });
+
+</script>
+
+<!-- 选择视频-->
+<script>
+    //插入视频
+    $(".chooseVideo").on("click", function () {
+        var $this = $(this);
+        layer.open({
+            type: 2,
+            title: '选择视频',
+            anim: 2,
+            shadeClose: true,
+            shade: 0.3,
+            area: ['90%', '90%'],
+            content: jpress.cpath + '/admin/attachment/video/browse?uititle=视频',
+            end: function () {
+
+                if (layer.data.uid != null) {
+
+                    var uid = layer.data.uid;
+                    // var cloudType = layer.data.type;
+                    var cover = jpress.cpath + layer.data.cover;
+
+                    if (typeof currentCKEditor != 'undefined' && currentCKEditor) {
+
+                        var video = document.createElement('video')
+                        video.setAttribute("data-vid", uid)
+                        video.setAttribute("poster", cover);
+                        video.setAttribute('style', "height:240px;width:425px;")
+                        video.setAttribute("class", "jpress-video");
+
+                        //视频播放容器的id
+                        var idStr = "video_player_container"+(Math.random()).toString().slice(5,10)
+                        video.setAttribute('id', idStr);
+
+                        insertHtmlToEditor(video.outerHTML);
+
+                    } else if (currentVditor) {
+                        alert("此编辑器暂不支持插入视频！")
+                    }
+                }
+            }
+        });
+
+    })
+
+
+    //选择表单
+    $(".chooseForm").on("click", function () {
+        var $this = $(this);
+
+        layer.open({
+            type: 2,
+            title: '选择表单',
+            anim: 2,
+            shadeClose: true,
+            shade: 0.3,
+            area: ['90%', '90%'],
+            content: jpress.cpath + '/admin/form/browse',
+            end: function () {
+
+                if (layer.data.uid) {
+
+                    var formUUID = layer.data.uid;
+
+                    var formName = layer.data.name;
+
+                    let html = '<div><div class="jpress-form-card" contenteditable="false" data-form-id=' + formUUID + '>' + formName + '（表单）</div></div><br />'
+
+                    insertHtmlToEditor(html);
+
+                }
+
+            }
+        })
+
+    })
+
+</script>
+
+#end
+#define css()
+<link href="#(CPATH)/static/components/editable/css/bootstrap-editable.css" rel="stylesheet">
+<link href="#(CPATH)/static/components/selectize/css/selectize.css" rel="stylesheet">
+<link href="#(CPATH)/static/components/selectize/css/selectize.bootstrap4.css" rel="stylesheet">
+<link href="#(CPATH)/static/components/highlight/styles/github.css" rel="stylesheet">
+<link href="#(CPATH)/static/components/vditor/dist/index.css" rel="stylesheet">
+
+<style>
+    .main-footer.text-sm, .main-footer {
+        display: none !important;
+    }
+
+    .content-wrapper {
+        position: relative;
+        min-height: calc(100vh - calc(3.5rem + 1px));
+        overflow: hidden;
+    }
+
+    .panelContainer {
+        position: relative;
+        height: calc(100% - 71px);
+    }
+
+    .popover-content {
+        padding: 9px 14px;
+        margin: 0 10px;
+    }
+
+    #slug {
+        cursor: pointer;
+    }
+
+    .vditor-wysiwyg pre.vditor-reset:focus {
+        outline: none;
+        background-color: #fff;
+    }
+    .article-header i {
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    .boder-bottom {
+        border-bottom: 1px solid #d9d9d9;
+    }
+
+    .setting-dropmenu {
+        width: 300px;
+        top: 100%;
+        left: initial !important;
+        right: 0;
+    }
+
+    .tab-content {
+        height: 100%;
+    }
+
+    .leftPanel {
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .leftPanel::-webkit-scrollbar {
+        width: 0;
+    }
+
+    .rightPanel {
+        position: sticky;
+        height: 100%;
+        overflow-y: scroll;
+    }
+
+    .pannel-inner {
+        width: 100%;
+        height: auto;
+        padding-left: 0 !important;
+        overflow-x: hidden;
+    }
+
+    #formAttrTab .nav-link {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border: none;
+        border-bottom: 4px solid #fff;
+        position: relative;
+        top: -1px;
+        color: #333;
+        font-size: 15px;
+    }
+
+    #formAttrTab .nav-link.active {
+        border: none;
+        border-bottom: 4px solid #0056b3;
+        color: #0056b3;
+        font-size: 15px;
+    }
+
+    .dropdown-item {
+        padding: .75rem 1rem;
+    }
+
+    .card {
+        margin-bottom: 0;
+        border-radius: 0;
+    }
+
+    .ck-editor__editable_inline{
+        height: calc(100vh - 158px);
+    }
+
+    #rightSwitch {
+        display: inline-block;
+        padding: 3px 6px 2px;
+        border-radius: 4px;
+        cursor: pointer;
+        border: 1px solid #fff;
+    }
+
+    .switch-btn {
+        display: inline-block;
+        padding: 3px 6px 2px;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #000;
+        border: 1px solid #000;
+    }
+
+    .switch-btn i, .switch-btn-active i {
+        color: #fff;
+        font-size: 18px !important;
+        vertical-align: middle;
+    }
+
+    .switch-btn-active {
+        border: 1px solid #fff;
+        background-color: #fff;
+    }
+
+    .switch-btn-active i {
+        font-size: 18px !important;
+        color: #0069d9;
+    }
+
+    .ck-editor .ck-sticky-panel .ck-sticky-panel__content .ck-toolbar_grouping {
+        background: #fff;
+        height: 45px;
+        border-top: none;
+    }
+
+    .vditor {
+        border-top: none;
+    }
+
+    .vditor-toolbar {
+        padding-left: 64px;
+        height: 45px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+    }
+
+    .vditor-hint {
+        background: #f6f6f6;
+    }
+
+    .vditor-hint:before {
+        border-bottom-color: #f6f6f6;
+    }
+    .ck-source-editing-area{
+        min-height:100vh;
+        height:auto;
+    }
+</style>
+#end
+
+#define content()
+<section class="content" style="position: absolute;height:100%;width:100%;padding: 0">
+
+    <form action="#(CPATH)/admin/article/doWriteSave" method="post" id="form" class="h-100 bg-white">
+        <section class="article-header d-flex justify-content-between align-items-center p-3 boder-bottom bg-white">
+            <div class="d-flex align-items-center justify-content-between" style="width: 40%">
+                <div class="input-group mr-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">标题</span>
+                    </div>
+                    <textarea rows="1" type="text" class="form-control" placeholder="请输入文章标题..." name="article.title"
+                           autocomplete="off"
+                           id="article-title">#(article.title ??)</textarea>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="insertFile" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        插入...
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="insertFile">
+                        <a class="dropdown-item chooseAttachment" href="#">插入附件</a>
+                        <a class="dropdown-item chooseVideo" href="#">插入视频</a>
+                        <a class="dropdown-item chooseForm" href="#">插入表单</a>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+                <button type="button" data-status="draft" class="btn btn-secondary mr-2 submitBtn">保存草稿</button>
+                <a target="_blank" #if(article.id ??)
+                   href="#(CPATH)/admin/preview?url=#(CPATH)/admin/article/preview/#(article.id ??)" #else
+                   onclick="previewArticle(this)" #end
+                   id="preview" class="btn btn-secondary mr-2"><span>预览</span></a>
+                <button type="button" id="publisher" data-status="normal" class="btn btn-primary mr-2 submitBtn">
+                    <i class="fa-solid fa-rotate-right"  style="font-size: 14px"></i> 发布
+                </button>
+                <span class="switch-btn" id="rightSwitch"><i class="bi bi-gear" style="font-size:18px"></i></span>
+                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="pl-2"><i
+                        class="bi bi-three-dots-vertical"></i></span>
+                <div class="dropdown-menu mr-2">
+                    <a class="dropdown-item submitBtn" data-status="trash" href="javascript:;">移至垃圾箱</a>
+                    <a class="dropdown-item" href="javascript:;" onclick="doChangeEditor()">切换编辑器</a>
+                </div>
+            </div>
+        </section>
+
+        <input type="hidden" id="articleStatus" name="article.status" value='#(article.status ?? "draft")'>
+        <input type="hidden" id="articleId" name="article.id" value="#(article.id ??)">
+        <input type="hidden" id="appId" name="appId" value="#(appId ??)">
+        <input type="hidden" name="article.user_id" value="#(article.user_id ?? USER.id)">
+        <input type="hidden" id="editModeId" name="article.edit_mode" value="#(editMode ??)">
+        <div class="row panelContainer">
+            <div class="col-lg-9  leftPanel pr-0">
+                <div class="pannel-inner">
+                    <div class="form-group mb-0">
+                        <div class="">
+                            <div id="editor" style="height:auto;">#(article.orignalContent ??)</div>
+                            <input type="hidden" name="article.content" id="content"/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3 pl-0 pr-0 rightPanel">
+                <div class="pannel-inner">
+                    <ul class="nav nav-tabs" id="formAttrTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab"
+                               href="#main-tab" role="tab" aria-controls="component" aria-selected="true">文章</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#template-tab" role="tab"
+                               aria-controls="module" aria-selected="false">模板</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#extend-tab" role="tab"
+                               aria-controls="module" aria-selected="false">扩展</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content ">
+                        <div class="tab-pane fade show active" id="main-tab" role="tabpanel">
+                            <div class="accordion">
+
+
+                                <!--基础-->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#fields-card">
+                                                基础
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="fields-card" class="collapse">
+                                        <div class="card-body">
+
+
+                                            <div class="form-group">
+                                                <label class="col-sm-12">文章摘要</label>
+                                                <div class="col-sm-12">
+                                                    <textarea class="form-control"
+                                                              id="summary"
+                                                              name="article.summary"
+                                                              placeholder="请输入" rows="4">#(article.summary ??)</textarea>
+                                                    <p class="text-muted"></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-12">排序序号</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control"
+                                                           id="order_number"
+                                                           name="article.order_number"
+                                                           placeholder="请输入" value="#(article.order_number ??0)"/>
+                                                    <p class="text-muted">文章列表会根据这个数值进行排序，越大越靠前。</p>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label class="col-sm-12">外链</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control"
+                                                           id="link_to"
+                                                           name="article.link_to"
+                                                           placeholder="请输入" value="#unescape(article.link_to ??)"/>
+                                                    <p class="text-muted">填写外链后，浏览文章将会跳转到此链接。</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-12">发布时间</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control datetime"
+                                                           id="created"
+                                                           name="article.created"
+                                                           placeholder="请输入" value="#date(article.created ??)"/>
+                                                    <p class="text-muted"></p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--固定链接-->
+                                <div class="card">
+                                    <div class="card-header" id="heading2">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link  btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#slug-card">
+                                                固定链接
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="slug-card" class="collapse">
+                                        <div class="card-body">
+                                            网址：<span
+                                                class="domainSpan">#option('web_domain')</span>#(CPATH)/article/<span
+                                                id="slug"
+                                                class="slugSpan"
+                                                for-input="article-slug">#(article.slug ??)</span>#if(option("web_fake_static_enable"))#option('web_fake_static_suffix')#end
+                                            #if(article && article.isNormal())
+                                            （<a href="#(article.url)" target="_blank">访问</a>）
+                                            #end
+                                            <input type="hidden" id="article-slug" name="article.slug"
+                                                   value="#(article.slug ??)">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--分类-->
+                                <div class="card">
+                                    <div class="card-header" id="heading3">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#category-card">
+                                                分类
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="category-card" class="collapse">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                #for(category : categories)
+                                                <div>
+                                                    <label>
+                                                        #for(i = 0; i < category.layerNumber; i++)
+                                                        &nbsp;&nbsp;
+                                                        #end
+
+                                                        #if(category.isCheck)
+                                                        <input type="checkbox" name="category" value="#(category.id)"
+                                                               checked/>
+                                                        #else
+                                                        <input type="checkbox" name="category" value="#(category.id)"/>
+                                                        #end
+
+                                                        #(category.title ??)
+                                                    </label>
+                                                </div>
+                                                #else
+                                                暂无分类
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--图片-->
+                                <div class="card">
+                                    <div class="card-header" id="heading5">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link  btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#image-card">
+                                                图片
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="image-card" class="collapse">
+                                        <div class="card-body p-0">
+                                            <img src="#(CPATH)#(article.thumbnail ?? '/static/commons/img/nothumbnail.jpg')"
+                                                 style="width: 100%;max-height: 500px"
+                                                 id="thumbnail">
+                                            <input type="hidden" value="#(article.thumbnail ??)"
+                                                   name="article.thumbnail"
+                                                   id="articleThumbnail">
+                                        </div>
+                                        <div class="card-footer">
+                                            <button type="button" class="btn-image-browser btn btn-default btn-sm "
+                                                    for-src="thumbnail"
+                                                    for-input="articleThumbnail">选择图片
+                                            </button>
+                                            <a href="javascript:;" style="padding-left: 15px"
+                                               id="removeThumbnail">移除</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--标签-->
+                                <div class="card">
+                                    <div class="card-header" id="heading4">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#tags-card">
+                                                标签
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="tags-card" class="collapse">
+                                        <div class="card-body">
+                                            <select class="form-control article-tags" multiple="multiple" name="tag">
+                                                #for(tag : tags)
+                                                <option value="#(tag.title ??)" selected>#(tag.title ??)</option>
+                                                #end
+                                            </select>
+                                            <p class="text-muted">多个标签请用 “回车键” 或英文逗号（,）隔开。</p>
+
+                                            <div class="tags">
+                                                #tags(count = 20)
+                                                #for(tag : tags)
+                                                <a href="javascript:;" class="newTag">#(tag.title)</a>
+                                                #end
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--SEO-->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#seo-card">
+                                                SEO
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="seo-card" class="collapse">
+                                        <div class="card-body">
+
+                                            <div class="form-group">
+                                                <label class="col-sm-12">SEO标题</label>
+                                                <div class="col-sm-12">
+                                                    <input type="text" class="form-control" placeholder="请输入"
+                                                           id="meta_title" name="article.meta_title"
+                                                            value="#(article.meta_title ??)">
+                                                    <p class="text-muted"></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-12">SEO关键字</label>
+                                                <div class="col-sm-12">
+                                                    <textarea class="form-control" id="meta_keywords"
+                                                              name="article.meta_keywords" placeholder="请输入"
+                                                              rows="2">#(article.meta_keywords ??)</textarea>
+                                                    <p class="text-muted"></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-12">SEO描述</label>
+                                                <div class="col-sm-12">
+                                                    <textarea class="form-control" id="meta_description"
+                                                              name="article.meta_description" placeholder="请输入"
+                                                              rows="2">#(article.meta_description ??)</textarea>
+                                                    <p class="text-muted"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--状态-->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#status-card">
+                                                状态
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="status-card" class="collapse">
+                                        <div class="card-body">
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-9"
+                                                       style="padding-top:7.5px;padding-left:15px">允许评论</label>
+                                                <div class="col-sm-3">
+                                                    <input type="checkbox" class="switchery" #checkedIf(article.comment_status ?? true)
+                                                           data-for="comment_status" value="true">
+                                                    <input type="hidden" id="comment_status" name="article.comment_status">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-9"
+                                                       style="padding-top:7.5px;padding-left:15px">是否推荐</label>
+                                                <div class="col-sm-3">
+                                                    <input type="checkbox" class="switchery" #checkedIf(article.with_recommend ??)
+                                                           data-for="with_recommend" value="true">
+                                                    <input type="hidden" id="with_recommend" name="article.with_recommend">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-9"
+                                                       style="padding-top:7.5px;padding-left:15px">是否置顶</label>
+                                                <div class="col-sm-3">
+                                                    <input type="checkbox" class="switchery" #checkedIf(article.with_top ??)
+                                                           data-for="with_top" value="true">
+                                                    <input type="hidden" id="with_top" name="article.with_top">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-9"
+                                                       style="padding-top:7.5px;padding-left:15px">是否热门</label>
+                                                <div class="col-sm-3">
+                                                    <input type="checkbox" class="switchery" #checkedIf(article.with_hot ??)
+                                                           data-for="with_hot" value="true">
+                                                    <input type="hidden" id="with_hot" name="article.with_hot">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-9"
+                                                       style="padding-top:7.5px;padding-left:15px">是否头条</label>
+                                                <div class="col-sm-3">
+
+                                                    <input type="checkbox" class="switchery" #checkedIf(article.with_lead_news ??)
+                                                           data-for="with_lead_news" value="true">
+                                                    <input type="hidden" id="with_lead_news" name="article.with_lead_news">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-9" style="padding-top:7.5px;padding-left:15px">是否允许被搜索</label>
+                                                <div class="col-sm-3">
+                                                    <input type="checkbox" class="switchery" #checkedIf(article.with_allow_search ?? true)
+                                                           data-for="with_allow_search" value="true">
+                                                    <input type="hidden" id="with_allow_search" name="article.with_allow_search">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                        <!--模板 tab -->
+                        <div class="tab-pane fade" id="template-tab" role="tabpanel">
+                            <div class="accordion">
+
+                                <!--模板-->
+                                <div class="card">
+                                    <div class="card-header" id="heading10">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#template-card">
+                                                模板
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="template-card" class="collapse show">
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <label class="col-sm-12">渲染模板文件</label>
+                                                <select class="form-control" name="article.style">
+                                                    <option value="">默认（article.html）</option>
+                                                    #for(style : styles)
+                                                    <option value="#(style)" #selectedIf(article &&
+                                                            article.style==style)>
+                                                        article_#(style).html
+                                                    </option>
+                                                    #end
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-12">文章标识</label>
+                                                <input type="text" class="form-control" name="article.flag"
+                                                       placeholder="文章标识" value="#(article.flag ??)" id="flag"/>
+                                                #if(flags && flags.size() > 0)
+                                                <p class="text-muted">当前模板支持的展示标识有：</p>
+                                                <div class="tags">
+                                                    #for(flag : flags ??)
+                                                    <a href="javascript:;" class="tflag">#(flag)</a>
+                                                    #end
+                                                </div>
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                        <!--扩展 tab-->
+                        <div class="tab-pane fade" id="extend-tab" role="tabpanel">
+                            <div class="accordion">
+
+                                <!--扩展属性-->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left text-dark" type="button"
+                                                    data-toggle="collapse" data-target="#extend-card">
+                                                扩展属性
+                                                <span class="float-right"><i class="bi bi-chevron-down"></i></span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="extend-card" class="collapse show">
+                                        <div class="card-body">
+
+                                            #(fields.render('暂无扩展字段'))
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+#end
