@@ -1,0 +1,28 @@
+<div class="jpress-form-item">
+    <div class="jpress-form-group clearfix">
+        <div class="jpress-label-left">
+            <label>#(label ??)</label>
+        </div>
+        <div class="jpress-input-block">
+            #if(value)
+            #for(v : value)
+            <div class="jpress-upload-item">
+                <img id="#(v)" src="#(v)"
+                     style="display: block; width: 126px; height: 126px; object-fit: cover;">
+            </div>
+            #end
+
+            #else
+            <div class="uploadList" data-url="#(url ??)" data-name="#(name ??)" data-count="#(count ?? 3)">
+                <button type="button" class="jpress-upload-btn">
+                    <i class="jpress-icon"> + </i>
+                    <p>点击上传图片</p>
+                    <input class="bsForm-upload-file jpress-upload-file" type="file"
+                           id="#(id ??)"
+                           accept="image/gif,image/jpeg,image/jpg,image/png,image/svg,image/webp,image/bmp">
+                </button>
+            </div>
+            #end
+        </div>
+    </div>
+</div>

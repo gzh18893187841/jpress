@@ -1,0 +1,44 @@
+<nav class="main-header navbar navbar-expand-md navbar-light navbar-white" style="border:none;-webkit-box-shadow: 0 0 8px 0 rgb(0 0 0 / 10%);
+    box-shadow: 0 0 8px 0 rgb(0 0 0 / 10%);">
+    <div class="container">
+        <a href="#(CPATH)/" class="navbar-brand">
+            <span class="brand-text">#option('web_name','JPress')</span>
+        </a>
+
+
+        <!-- Right navbar links -->
+        <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="javascript:;" style="display: flex;align-items: center;font-size:14px;">
+                    <span class="hidden-xs" >您好 #(user.nickname ??) , 欢迎回来</span>
+                </a>
+            </li>
+
+
+
+            <!-- 头像信息 -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="javascript:;" style="display: flex;align-items: center">
+                    <img src="#(USER.avatar ??)" class="img-circle" style="width:30px;height: 30px">
+                    <i class="fas fa-caret-down"></i>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="#(CPATH)/ucenter" class="dropdown-item">
+                        <i class="fas fa-home"></i> 用户中心
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#(CPATH)/ucenter/info" class="dropdown-item">
+                        <i class="fas fa-user"></i> 个人信息
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#(CPATH)/ucenter/logout" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> 退出登录
+                    </a>
+                </div>
+            </li>
+            <!-- 头像信息结束 -->
+
+        </ul>
+    </div>
+</nav>

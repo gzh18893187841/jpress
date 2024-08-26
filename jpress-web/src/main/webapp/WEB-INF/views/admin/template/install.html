@@ -1,0 +1,118 @@
+#@layout()
+
+#define css()
+<link rel="stylesheet" href="#(CPATH)/static/components/jquery-file-upload/css/jquery.fileupload.css">
+<style>
+    #uploader {
+        height: 230px;
+    }
+
+    .myPanel {
+        font-size: 25px;
+        color: #ccc;
+        text-align: center;
+        padding-top: 60px;
+    }
+
+</style>
+#end
+
+#define script()
+<script src="#(CPATH)/static/components/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="#(CPATH)/static/components/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script src="#(CPATH)/static/components/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script>
+
+    $('#cfile').fileupload({
+        dropZone: $('#uploader'),
+        url: '#(CPATH)/admin/template/doInstall',
+        sequentialUploads: true,
+        submit:function (e,data){
+            data.formData = {type:getInstallType()}
+            return true;
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $(".myPanel").text("上传进度：" + progress + "%")
+        },
+        done: function (e, data) {
+
+            $(".myPanel").text("或者模板文件到这里进行安装...");
+
+            if (data.result.state == "ok") {
+                toastr.options.onHidden = function () {
+                    location.href = "#(CPATH)/admin/template/list";
+                }
+                toastr.success(" 模板安装成功 ")
+            } else {
+                toastr.error(data.result.message)
+            }
+        }
+    });
+
+
+
+    function getInstallType(){
+
+       return $("#installType option:selected").val();
+    }
+
+
+
+</script>
+
+#end
+
+#define content()
+<section class="content-header">
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <h1>
+                            安装模板
+                            <small data-toggle="tooltip" title="" data-placement="right"
+                                   data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                            <small> 首页 / 模板 / 安装模板</small>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+
+    <div class="container-fluid">
+        <div class="card card-outline card-primary">
+            <div class="card-body">
+                <div id="uploader">
+                            <span class="btn btn-block btn-primary fileinput-button" style="width: 120px">
+                                <i class="fas fa-plus"></i>
+                                <span>选择模板...</span>
+                                <input id="cfile" type="file" name="files[]" multiple>
+                            </span>
+
+                        <select class="form-control" style="width: 180px;margin-left: 130px;transform:translateY(-35px)" id="installType">
+                            <option value="default">安装方式：默认...</option>
+                            <option value="new">全新安装</option>
+                            <option value="cover">覆盖安装</option>
+                        </select>
+
+                    <div class="myPanel">
+                        或者模板文件到这里进行安装...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</section>
+#end

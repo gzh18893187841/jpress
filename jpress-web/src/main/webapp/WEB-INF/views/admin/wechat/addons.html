@@ -1,0 +1,117 @@
+#@layout()
+
+#define script()
+<script>
+
+    function doEnableAddon(id) {
+        ajaxGet("#(CPATH)/admin/wechat/doEnableAddon?id=" + id)
+    }
+
+
+    function doCloseAddon(id) {
+        ajaxGet("#(CPATH)/admin/wechat/doCloseAddon?id=" + id)
+    }
+
+    $(".addon-enable").on("click", function () {
+        doEnableAddon($(this).attr("data-id"));
+    })
+
+    $(".addon-close").on("click", function () {
+        doCloseAddon($(this).attr("data-id"));
+    })
+
+
+</script>
+
+#end
+
+
+#define content()
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <h1>
+                                微信运营插件
+                                <small data-toggle="tooltip" title="" data-placement="right"
+                                       data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                                <small> 首页 / 微信 / 运营插件</small>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+
+    </section>
+
+
+    <section class="content">
+
+        <div class="container-fluid">
+                <div class="card card-outline card-primary">
+                    <div class="card-header with-border">
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <th style="width: 250px">名称</th>
+                                <th>描述</th>
+                                <th style="width: 100px">作者</th>
+                                <th style="width: 100px">版本</th>
+                            </tr>
+
+                            #for(wechatAddon : wechatAddons)
+                            <tr>
+                                <td >
+                                    <strong>
+                                        <a href="#">#(wechatAddon.title ??)</a>
+                                        #if(!wechatAddon.isEnable()) （已经关闭）#end
+                                    </strong>
+
+                                    <div class="jp-action-card">
+                                        <div class="jp-action-body">
+                                            #if(wechatAddon.isEnable())
+                                            <a href="javascript:;" style="color: #a00" data-id="#(wechatAddon.id)"
+                                               class="addon-close">关闭</a> |
+                                            #else
+                                            <a href="javascript:;" style="color: #006505" data-id="#(wechatAddon.id)"
+                                               class="addon-enable">启用</a> |
+                                            #end
+                                            <a href="javascript:;" style="color: #006505">查看</a>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>#(wechatAddon.description ??)</td>
+                                <td>#(wechatAddon.author ??)</td>
+                                <td>#(wechatAddon.version ??)</td>
+                            </tr>
+                            #else
+                            <tr class="nodata"><td colspan="999">暂无数据</td> </tr>
+                            #end
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-12">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+    </section>
+
+#end

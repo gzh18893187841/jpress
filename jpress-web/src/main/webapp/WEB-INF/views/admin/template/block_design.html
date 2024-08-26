@@ -1,0 +1,342 @@
+#@layout()
+
+#define css()
+<link rel="stylesheet" href="#(CPATH)/static/components/bootstrap-slider/css/bootstrap-slider.min.css">
+<link rel="stylesheet" href="#(CPATH)/static/components/bs-form-builder/bs-form-builder.min.css">
+<link rel="stylesheet" href="#(CPATH)/static/admin/css/block.css">
+<style>
+    .content-wrapper {
+        position: relative;
+        min-height: calc(100vh - calc(3.5rem + 1px));
+        overflow: hidden;
+    }
+
+    .bsFormContainer {
+        min-height: auto !important;
+    }
+
+    .tool-content {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+    }
+
+    .middleContent {
+        overflow-y: scroll;
+    }
+
+    .main-footer.text-sm {
+        display: none !important;
+    }
+
+    .item-title {
+        font-size: 14px;
+    }
+
+    .bsFormFilter {
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    .bsFormFilter .bsFormItem {
+        border: 1px dashed #d1d1d1;
+        cursor: pointer;
+        padding: 10px;
+        margin-bottom: 10px !important;
+    }
+
+    .bsFormItem > .bsFormItem:hover, .bsFormItem > .bsFormItem.active {
+        border: 1px solid #007bff !important;
+        background-color: #e9f4fd !important;
+    }
+
+    .bsItemContainer {
+        min-height: 50px;
+        border: 1px dashed #ccc;
+        background: #f1f1f1;
+        padding: 5px 5px 0 5px;
+    }
+
+    .card-body {
+        border: none !important;
+        background: #fff !important;
+        padding: 1.25rem !important;
+    }
+
+    .right-card-title {
+        margin-bottom: 10px !important;
+    }
+
+    .cl-code .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .cl-code img {
+        max-width: 50%;
+        margin: 0 auto;
+    }
+
+    .bsFormItem .bsFormItem.active {
+        border: 1px solid #0056b3 !important;
+        background-color: #e9f4fd !important;
+    }
+
+    .dropdown-item {
+        padding: .75rem 1rem;
+    }
+
+    .placeholder{
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        background: #f4f6f9;
+        font-size: 14px;
+    }
+</style>
+#end
+
+#define script()
+<script src="#(CPATH)/static/components/bootstrap-slider/bootstrap-slider.js"></script>
+<script src="#(CPATH)/static/components/sortable/sortable.min.js"></script>
+<script src="#(CPATH)/static/components/fasty/fasty.min.js"></script>
+<!--<script src="#(CPATH)/static/components/bs-form-builder/bs-form-builder.all.min.js"></script>-->
+<script src="#(CPATH)/static/components/bs-form-builder/bs-form-builder-components.js"></script>
+<script src="#(CPATH)/static/components/bs-form-builder/bs-form-builder.js"></script>
+<script>
+    $(function () {
+        $('.slider').bootstrapSlider();
+
+        $("#toggleBtn").click(function () {
+            $(this).toggleClass(" bi-chevron-down bi-chevron-up")
+            $("#superContent").toggle();
+        })
+
+        $("#rightSwitch").click(function () {
+            $(this).toggleClass('switch-btn');
+            $(".rightContent").toggle();
+            $(".middleContent").toggleClass("col-md-9  col-sm-8", "col-md-6  col-sm-4");
+        })
+
+        $(".js-more").click(function () {
+
+        })
+
+
+        $('#builder').bsFormBuilder({
+            customBuilderStructure: true,
+            bsFormContainerSortableGroup: 'main',
+            components: '#(CPATH)/admin/template/block/components',
+            customRender: '#(CPATH)/admin/template/block/render',
+            datas: '#(CPATH)/admin/template/block/datas',
+
+            //禁用 name 和 label 属性
+            defaultProps: [
+                {
+                    name: "name",
+                    type: "none",
+                },
+                {
+                    name: "label",
+                    type: "none",
+                },
+                {
+                    name: "required",
+                    type: "none",
+                },
+            ],
+
+            propTemplates: {
+                target: function () {
+                    return '<div class="form-group clearfix">' +
+                        '       <div class="form-label-left">' +
+                        '            <legend class="col-form-label pt-0">打开方式</legend>' +
+                        '        </div>' +
+                        '        <div class="flex-auto">' +
+                        '            <select class="custom-select onchange" {{~if (disabled)}}disabled{{~end}} data-attr="{{name}}">' +
+                        '                   <option value="">当前窗口</option>' +
+                        '                   <option value="_blank" {{value == "_blank" ? "selected" : ""}}>新窗口(_blank)</option>' +
+                        '             </select>' +
+                        '        </div>' +
+                        '    </div>';
+                },
+
+                image: function () {
+                    return '<div class="form-group clearfix">' +
+                        '       <div class="form-label-left">' +
+                        '             {{~ if(required)}}' +
+                        '             <span class="red required">*</span>' +
+                        '             {{~end}}' +
+                        '              <label for="{{id}}">{{label}}</label>' +
+                        '        </div>' +
+                        '        <div class="flex-auto">' +
+                        '             <div class="jpress-image-browser">' +
+                        '               <input type="hidden" class="onchange" id="{{id}}" data-attr="{{name}}"  value="{{value}}" />' +
+                        '               {{~ if (value)}}' +
+                        '               <img src="{{value}}" />' +
+                        '               {{~else}}' +
+                        '               <img src="#(CPATH)/static/commons/img/nothumbnail.jpg" />' +
+                        '               {{~end}}' +
+                        '               <div class="image-action">' +
+                        '                   <a class="image-delete"> <i class="fa fa-trash"></i></a>' +
+                        '                   <a class="image-edit"> <i class="fa fa-edit"></i></a>' +
+                        '               </div>' +
+                        '            </div>' +
+                        '        </div>' +
+                        '    </div>';
+                },
+
+                video: function () {
+                    return '<div class="form-group clearfix">' +
+                        '       <div class="form-label-left">' +
+                        '             {{~ if(required)}}' +
+                        '             <span class="red required">*</span>' +
+                        '             {{~end}}' +
+                        '              <label for="{{id}}">{{label}}</label>' +
+                        '        </div>' +
+                        '        <div class="flex-auto">' +
+                        '             <div class="btn-group ">' +
+                        '             {{~ if($data.vid && $data.poster)}}' +
+                        '                 <a id="group-all" href="javascript:;" class="btn btn-default chooseVideo active"> <i class="bi bi-camera-video"></i> 已选择</a>' +
+                        '                 <a id="group-28d" href="javascript:;" class="btn btn-default deleteVideo">删除</a>' +
+                        '             {{~ else}}' +
+                        '                 <a id="group-all" href="javascript:;" class="btn btn-default chooseVideo"> <i class="bi bi-camera-video"></i> 选择视频</a>' +
+                        '             {{~ end}}' +
+                        '              </div>' +
+                        '        </div>' +
+                        '    </div>';
+                },
+            },
+
+            bsFormPropsItemAppended: function (builder, prop, data) {
+                if (prop.type === "image") {
+                    initImageBrowserButton()
+                }
+            }
+
+        });
+
+        $('.update').on('click', function () {
+            var datas = $('#builder').bsFormBuilder().data("bsFormBuilder").exportToJson();
+            jsonPost('#(CPATH)/admin/template/block/save', datas, function () {
+                showMessage("保存成功！")
+            })
+        });
+
+        // 折叠内容
+        $(".middleContent").on("click", ".btn-tool", function (event) {
+            // 阻止事件冒泡
+            event.stopPropagation();
+            let className = $(this).find("i").attr("class");
+            if (className == "fas fa-plus") {
+                $(this).find("i").attr('class', 'fas fa-minus');
+            } else {
+                $(this).find("i").attr('class', 'fas fa-plus');
+            }
+            $(this).parents(".card-header").next(".card-body").toggle();
+        })
+
+        $(".middleContent").on("click", "a", function (event) {
+            // 防止 a 跳转到其他页面
+            event.preventDefault();
+        })
+
+
+        //插入视频
+        $(".rightContent").on("click",".chooseVideo", function () {
+            var $this = $(this);
+            layer.open({
+                type: 2,
+                title: '选择视频',
+                anim: 2,
+                shadeClose: true,
+                shade: 0.3,
+                area: ['90%', '90%'],
+                content: jpress.cpath + '/admin/attachment/video/browse?uititle=视频',
+                end: function () {
+                    if (layer.data && layer.data.id){
+                        var builder = $('#builder').bsFormBuilder().data("bsFormBuilder");
+                        builder.updateDataAttr(builder.currentData,"vid",layer.data.id)
+                        builder.updateDataAttr(builder.currentData,"poster",layer.data.cover)
+                        builder.refreshPropsPanel();
+                    }
+                }
+            });
+        })
+
+        //删除视频
+        $(".rightContent").on("click",".deleteVideo", function () {
+            var builder = $('#builder').bsFormBuilder().data("bsFormBuilder");
+            builder.updateDataAttr(builder.currentData,"vid",'')
+            builder.updateDataAttr(builder.currentData,"poster",'')
+            builder.refreshPropsPanel();
+        })
+
+    });
+</script>
+#end
+
+#define content()
+<section class="content tool-content" id="builder" style="padding: 0">
+    <div class="card tool-container">
+        <div class="tool-header d-flex justify-content-between align-items-center">
+            <div>
+                <strong class="pr-3">模板板块设置</strong>
+                <!--                <span class="tool-btn"><i class="bi bi-x-square-fill"></i></span>-->
+                <!--                <span class="tool-btn"><i class="bi bi-arrow-90deg-left"></i></span>-->
+                <!--                <span class="tool-btn disabled"><i class="bi bi-arrow-90deg-right"></i></span>-->
+                <!--                <span class="tool-btn"><i class="bi bi-list-nested"></i></span>-->
+            </div>
+            <div>
+                <button class="btn btn-primary btn-sm mr-2 update">更新</button>
+                <span class="switch-btn" id="rightSwitch"><i class="bi bi-gear" style="font-size:18px"></i></span>
+<!--                <span class="tool-btn js-more" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i-->
+<!--                        class="bi bi-three-dots-vertical"></i></span>-->
+<!--                <div class="dropdown-menu mr-4 mt-4">-->
+<!--                    <a class="dropdown-item" href="#">项目一</a>-->
+<!--                    <a class="dropdown-item" href="#">项目二</a>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <!--***********************************-->
+        <div class="row jpress-row-container ml-0 mr-0">
+            <!-- 左侧 -->
+            <div class="col-md-3 col-sm-4 pd-0 leftContent">
+                <div class="component-title">
+                    模板自带
+                </div>
+                <div class="component-group d-flex align-items-center bsFormDrags" data-type="template">
+                    <div class="placeholder">该模板没有可用的组件</div>
+                </div>
+                <div class="component-title">
+                    系统内置
+                </div>
+                <div class="component-group d-flex align-items-center bsFormDrags" data-type="system">
+                </div>
+                <div class="component-title">
+                    布局辅助
+                </div>
+                <div class="component-group d-flex align-items-center bsFormDrags" data-type="layout">
+                </div>
+            </div>
+            <!-- 中间内容 -->
+            <div class="col-md-6  col-sm-4 middleContent bsFormContainer">
+                <div class="bsFormContainer-placeholder">您当前的模板，不支持板块设计功能~~~</div>
+                <!--项目列表-->
+                <!--<div class="middleItemlist"></div>-->
+            </div>
+            <!--右侧内容-->
+            <div class="col-md-3  col-sm-4 mb-3 rightContent">
+                <div class="pd10 tab-content pt-3 bsFormPropsTitle">
+                    <span class="icon"></span>
+                    <span class="text"></span>
+                </div>
+                <div class="pd10 tab-content pt-3 bsFormProps">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+#end

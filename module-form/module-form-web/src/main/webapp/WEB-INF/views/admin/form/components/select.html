@@ -1,0 +1,14 @@
+<div class="jpress-form-item">
+    <div class="jpress-form-group">
+        <div class="jpress-label-left">
+            <label class="pt-0">#(label ??)</label>
+        </div>
+        <div class="jpress-input-block">
+            <select class="jpress-custom-select" name="#(name ??)" #if(!withEdit) disabled #end>
+                #for(option : options)
+                <option value="#(option.value ??)" #if(value == option.value) selected #end>#(option.text ??)</option>
+                #end
+            </select>
+        </div>
+    </div>
+</div>

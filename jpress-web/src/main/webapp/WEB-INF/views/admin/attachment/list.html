@@ -1,0 +1,362 @@
+#@layout()
+
+#define css()
+<style>
+
+    .attachment_item {
+        position: relative;
+        height: 220px;
+        width: 18%;
+        padding: 0;
+        border: 1px solid #ddd;
+        margin: 10px 1% 10px 10px;
+        float: left;
+        cursor: pointer;
+    }
+
+    .attachment_item:hover {
+        border: 1px solid #3c8dbc;
+    }
+
+    .attachment_item img {
+        height: 90%;
+        min-height: 90%;
+        width: 100%;
+    }
+
+    .attachment_item_title {
+        height: 10%;
+        background-color: #ecf0f5;
+        text-align: center;
+        padding: 0 5px;
+        overflow: hidden;
+    }
+
+    .attachment_item_title p {
+        overflow: hidden;
+    }
+
+    .checkbox {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #0069d9;
+        background-color: #fff;
+        position: absolute;
+        top: 3px;
+        right: 4px;
+    }
+
+    .checkbox i {
+        position: relative;
+        font-size: 18px;
+        top: -3px;
+        font-weight: bold;
+    }
+
+    .attachment_item input[type="checkbox"] {
+        visibility: hidden;
+    }
+
+    /*.attachment_item:hover .checkbox*/
+    .attachment_item.checked .checkbox {
+        display: block;
+    }
+
+    .attachment_item.checked .checkbox i, .attachment_item:hover .checkbox i {
+        color: #0069d9;
+    }
+
+    #deleteGroup {
+        display: none;
+    }
+
+    .item-checkbox {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: none;
+    }
+</style>
+#end
+
+#define script()
+<script>
+    $(function () {
+        // 点击图片查看详情
+        $(".attachment_container").on("click", ".attachment-img", function () {
+            let id = $(this).data("id");
+            layer.open({
+                type: 2,
+                title: '附件详情',
+                anim: 2,
+                shadeClose: true,
+                shade: 0.3,
+                area: ['80%', '60%'],
+                content: '#(CPATH)/admin/attachment/detail/' + id,
+                end: function () {
+                    if (layer.data.needReload == true) {
+                        location.reload();
+                    }
+                }
+            });
+        })
+
+        // 单选按钮
+        $(".attachment_container").on("click", '.choose_attachment', function () {
+            var currentActive = $(this).hasClass("checked");
+            if (currentActive) {
+                $(this).removeClass("checked");
+                $(this).find(".item-checkbox").attr('checked', 'true')
+            } else {
+                $(this).addClass("checked");
+                $(this).find(".item-checkbox").attr('checked', 'false')
+            }
+        })
+
+        // 批量选择
+        $("#checkallBtn").click(function () {
+            $("#deleteGroup").show(); // 展示批量删除模式
+            $("#normalMode").hide();// 隐藏正常模式下的按钮
+            $(".attachment_item").addClass("choose_attachment"); // 添加选中class
+            $(".attachment_item img").removeClass("attachment-img");  // 移除图片详情class
+
+        })
+        // 取消选择
+        $("#cancelChoose").click(function () {
+            $("#deleteGroup").hide(); // 隐藏批量删除模式
+            $("#normalMode").show();// 展示正常模式下的按钮
+            $(".attachment_item").removeClass("choose_attachment"); // 移除选中class
+            $(".attachment_item img").addClass("attachment-img"); // 添加图片详情class
+            $(".attachment_item").each(function (i, element) {
+                $(this).removeClass("checked");
+            })
+            $("input[name='checkbox']").each(function () {
+                this.checked = false;
+            });
+            // 取消选中的全选按钮
+            $(".checkallbox input").prop("checked", false);
+
+        })
+        // 全选按钮
+        $("#checkall").click(function () {
+            if (this.checked) {//如果自己被选中
+                $("#deleteGroup").show(); // 展示批量删除模式
+                $("#normalMode").hide();// 隐藏正常模式下的按钮
+                $(".attachment_item").addClass("choose_attachment"); // 添加选中class
+                $(".attachment_item img").removeClass("attachment-img");  // 移除图片详情class
+
+                $("input[name=checkbox]").prop("checked", "true");
+                $(".attachment_item").each(function (i, element) {
+                    $(this).addClass("checked")
+                })
+            } else {
+                $("#normalMode").show();// 隐藏正常模式下的按钮
+                $("#deleteGroup").hide(); // 展示批量删除模式
+                $(".attachment_item").removeClass("choose_attachment"); // 添加选中class
+                $(".attachment_item img").addClass("attachment-img");  // 移除图片详情class
+
+                $("input[name='checkbox']").each(function () {
+                    this.checked = false;
+                });
+                $(".attachment_item").each(function (i, element) {
+                    $(this).removeClass("checked");
+                })
+            }
+        })
+
+        // 永久删除
+        $("#deleteItem").click(function () {
+            attachment_deleteByIds();
+        })
+    })
+
+    //点击批量删除按钮
+    function attachment_deleteByIds() {
+        //获取已经勾选的复选框
+        let checkedId = new Array();			//定义一个数组来保存已选中的value值
+
+        $('div[name="tableItem"]').each(function () {
+            var isChecked = $(this).hasClass("checked");
+            if (isChecked) {
+                var dataId = $(this).find('img').attr('data-id');
+                checkedId.push(dataId);
+            }
+        });
+
+        if (checkedId.length == 0) {
+            alert("请选择要删除的信息！");
+            return false;
+        }
+        console.log("删除的id数组为：" + checkedId);
+
+        if (confirm('确定要删除这些附件吗？删除后不可恢复！')) {
+            //进行批量删除操作
+            $.ajax({
+                type: "POST",
+                url: jpress.cpath + "/admin/attachment/doDelByIds",
+                data: {"ids": checkedId.toString()},
+                success: function (data) {
+                    console.log("批量删除成功！");
+                    location.reload();      //重新刷新页面
+                },
+                error: function () {
+                    console.log("批量删除失败！");
+                }
+            });
+        }
+
+
+    }
+
+
+</script>
+#end
+
+#define content()
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <h1>
+                            附件管理
+                            <small data-toggle="tooltip" title="" data-placement="right"
+                                   data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                            <small> 首页 / 附件 / 附件管理</small>
+                        </h1>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-6 ">
+                <div class=" float-sm-right" style="padding-top:15px ">
+                    <a href="#(CPATH)/admin/attachment/category" type="button" class="btn btn-outline-secondary"><i
+                            class="fa fa-cog"></i> 分类管理</a>
+                    <a href="#(CPATH)/admin/attachment/upload" class="btn btn-primary ">
+                        <i class="fas fa-plus"></i> 上传
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+
+    <div class="container-fluid">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <form class="admin-search-panel" action="" method="get">
+                    <div class="row" id="normalMode">
+                        <div class="form-group col-lg-2">
+                            <input type="text" placeholder="标题" class="form-control" name="title"
+                                   value="#para('title')">
+                        </div>
+                        <div class="form-group col-lg-2">
+                            <select class="form-control" name="categoryId">
+                                <option value="">全部分类</option>
+                                #for(category : categories)
+                                <option value="#(category.id ??)" #selectedIf(category.id== numberPara('categoryId'))>#(category.title ??)</option>
+                                #end
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <button type="submit" class="btn btn-primary ">查询</button>
+                            <button type="reset" class="btn btn-default">重置</button>
+                            <button type="reset" class="btn btn-default" id="checkallBtn">批量选择</button>
+                        </div>
+                    </div>
+                    <!--批量删除模式-->
+                    <div class="row" id="deleteGroup">
+                        <button type="button" class="btn btn-warning mr-3 ml-2" id="deleteItem">永久删除</button>
+                        <button type="button" class="btn btn-default" id="cancelChoose">取 消</button>
+                    </div>
+                    <!-- /.card-body -->
+                </form>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                <div class="row attachment_container">
+                    #for(attachment : page.list ??)
+                    <div class="attachment_item" name="tableItem">
+                        #if(attachment.isImage())
+                        <img src="#(CPATH)#(attachment.path ??)" title="#(attachment.title ??)" class="attachment-img"
+                             alt="#(attachment.title ??)" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isDoc())
+                        <img src="#(CPATH)/static/commons/img/suffix/doc.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isXls())
+                        <img src="#(CPATH)/static/commons/img/suffix/xls.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isPpt())
+                        <img src="#(CPATH)/static/commons/img/suffix/ppt.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isTxt())
+                        <img src="#(CPATH)/static/commons/img/suffix/txt.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isZip())
+                        <img src="#(CPATH)/static/commons/img/suffix/zip.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isRar())
+                        <img src="#(CPATH)/static/commons/img/suffix/rar.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isExe())
+                        <img src="#(CPATH)/static/commons/img/suffix/exe.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isPdf())
+                        <img src="#(CPATH)/static/commons/img/suffix/pdf.png" title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isAudio())
+                        <img src="#(CPATH)/static/commons/img/suffix/audio.png"
+                             title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #elseif(attachment.isVideo())
+                        <img src="#(CPATH)/static/commons/img/suffix/video.png"
+                             title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #else
+                        <img src="#(CPATH)/static/commons/img/suffix/unknow.png"
+                             title="#(attachment.title ??)"
+                             alt="#(attachment.title ??)" class="attachment-img" data-id="#(attachment.id ??)">
+                        #end
+                        <div class="attachment_item_title">
+                            <p>#(attachment.title ??)</p>
+                        </div>
+                        <span class="checkbox"><i class="bi bi-check2"></i></span>
+                        <input type="checkbox" class="item-checkbox" name="checkbox" value="#(attachment.id ??)">
+                    </div>
+                    #else
+                        暂无任何附件内容
+                    #end
+                </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+
+                    <div class="col-sm-6">
+                        #@_paginate()
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-footer -->
+        </div>
+        <!-- /.card -->
+    </div>
+</section>
+
+
+#end

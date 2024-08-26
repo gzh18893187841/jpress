@@ -1,0 +1,150 @@
+#@layout()
+
+#define script()
+<script>
+
+    $('.del-action').on('click', function () {
+        if (confirm('确定要删除该站点吗？删除后不可恢复')) {
+            var id = $(this).attr("data-id");
+            ajaxGet("/admin/site/delById/" + id);
+        }
+    });
+
+</script>
+
+
+#end
+
+#define content()
+
+<section class="content-header">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <h1>
+                            站点管理
+                            <small data-toggle="tooltip" title="可以查看所有站点,可以对其编辑或删除等操作" data-placement="bottom"
+                                   data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                            <small> 首页 / 系统 / 站点管理</small>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="content">
+
+    <div class="container-fluid">
+        <div class="card card-outline card-primary">
+            <form class=" form-setting" autocomplete="off" id="optionForm" method="post">
+
+                <!--指定保存到 siteId = 0 的数据-->
+                <input type="hidden" name="__siteId" value="0">
+
+                <div class="card-body">
+
+                    <h4 class="form-header">主站点设置</h4>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">主站点域名</label>
+
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="填写网站的域名"
+                                   name="web_domain" #(SITE ? 'readonly' : '') value="#option('web_domain','',0)">
+                            <p class="text-muted"> 请填写http（或https）开头，结尾不要包含“/”。例如：http://www.jpress.cn </p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">跳转子站点</label>
+                        <div class="col-sm-6">
+                            <input type="checkbox" class="switchery" data-for="site_redirect_by_browser_lang"
+                                   #checkedIf(option("site_redirect_by_browser_lang",false))>
+                            <input type="hidden" id="site_redirect_by_browser_lang"
+                                   name="site_redirect_by_browser_lang">
+                            <p class="text-muted">
+                                自动根据浏览器语言，跳转到子站点
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <div class="offset-sm-2 col-sm-10 submit-block">
+                        <div class="card-submit">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <h4 class="form-header" style="line-height: 35px">子站点列表
+                            <a href="#(CPATH)/admin/site/edit" type="button" class="btn btn-primary float-sm-right"><i
+                                    class="fas fa-plus"></i> 新建子站点</a>
+                        </h4>
+
+                    </div>
+
+
+                    #if(siteInfos && siteInfos.size() > 0)
+                    <div class="card card-outline card-primary">
+                        <div class="card-body p-0">
+                            <table class="table table-striped table-action">
+                                <thead>
+                                <tr>
+                                    <th style="width: 150px">子站点名称</th>
+                                    <th style="width: 100px">自定义站点ID</th>
+                                    <th style="width: 100px">绑定域名</th>
+                                    <th style="width: 100px">绑定二级目录</th>
+                                    <th style="width: 100px">绑定语言</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                #for(item : siteInfos ??)
+                                <tr>
+                                    <td>
+                                        #(item.name ??)
+                                        <div class="jp-action-card">
+                                            <div class="jp-action-body">
+                                                <a href="#(item.url ??)" target="_blank" style="color: #006505">访问</a> |
+                                                <a href="#(CPATH)/admin/site/edit/#(item.id ??)" style="color: #006505">编辑</a> |
+                                                <a href="javascript:;" class="del-action red-action"
+                                                   data-id="#(item.id)">删除</a>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td>#(item.siteId ??)</td>
+                                    <td>#(item.bindDomain ??)</td>
+                                    <td>#(item.bindPath ??)</td>
+                                    <td>#(item.bindLangs ??)</td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    #else
+                    当前无任何子站点
+                    #end
+
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+</section>
+
+#end

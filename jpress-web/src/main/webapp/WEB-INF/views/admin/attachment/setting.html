@@ -1,0 +1,507 @@
+#@layout()
+
+#define script()
+
+<script>
+
+    selectCloudType();
+
+    //切换视频云
+    function selectCloudType() {
+        var cloudType = $("#cloudType").val();
+        if (cloudType == '1') {
+            $("#aliyun").show();
+            $("#tencentyun").hide();
+            $("#huaweicloud").hide();
+            $("#local").hide();
+        } else if (cloudType == '2') {
+            $("#aliyun").hide();
+            $("#tencentyun").show();
+            $("#huaweicloud").hide();
+            $("#local").hide();
+        }
+        else if (cloudType == '3') {
+            $("#aliyun").hide();
+            $("#tencentyun").hide();
+            $("#huaweicloud").show();
+            $("#local").hide();
+        }
+        else if (cloudType == '4') {
+            $("#aliyun").hide();
+            $("#tencentyun").hide();
+            $("#huaweicloud").hide();
+            $("#local").show();
+        }
+    }
+
+</script>
+
+#end
+
+#define content()
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <h1>
+                            附件功能设置
+                            <small data-toggle="tooltip" title="" data-placement="right"
+                                   data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                            <small> 首页 / 附件 / 附件功能设置</small>
+                        </h1>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-outline card-primary">
+
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form class=" form-setting" autocomplete="off" id="optionForm">
+                <div class="card-body">
+
+
+                    <h4 class="form-header">附件大小限制</h4>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">图片限制</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="图片最大值"
+                                   name="attachment_img_maxsize" value="#option('attachment_img_maxsize')">
+                            <p class="text-muted"> 单位兆（M），默认为 10M，填写0允许任何大小。</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">其他文件</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="视频、文档等最大值"
+                                   name="attachment_other_maxsize" value="#option('attachment_other_maxsize')">
+                            <p class="text-muted"> 单位兆（M），默认为 100M，填写0允许任何大小。</p>
+                        </div>
+                    </div>
+
+
+                    <h4 class="form-header">阿里云OSS同步</h4>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">是否启用附件同步</label>
+                        <div class="col-sm-6">
+                            <input type="checkbox" class="switchery" data-for="attachment_aliyunoss_enable"
+                                   #checkedIf(option("attachment_aliyunoss_enable"))>
+                            <input type="hidden" id="attachment_aliyunoss_enable"
+                                   name="attachment_aliyunoss_enable">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">OSS删除同步</label>
+                        <div class="col-sm-6">
+                            <input type="checkbox" class="switchery" data-for="attachment_aliyunoss_del"
+                                   #checkedIf(option("attachment_aliyunoss_del"))>
+                            <input type="hidden" id="attachment_aliyunoss_del"
+                                   name="attachment_aliyunoss_del">
+                            <p class="text-muted"> 开启后会在删除附件时同时也删除OSS中的文件</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">API访问域名</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="阿里云oss的 endPoint"
+                                   name="attachment_aliyunoss_endpoint"
+                                   value="#option('attachment_aliyunoss_endpoint')">
+                            <p class="text-muted"> 阿里云API域名详情：<a target="_blank"
+                                                                 href="https://help.aliyun.com/document_detail/31837.html">https://help.aliyun.com/document_detail/31837.html</a>。
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">AccessKeyId</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="通过阿里云安全令牌生成..."
+                                   name="attachment_aliyunoss_accesskeyid"
+                                   value="#option('attachment_aliyunoss_accesskeyid')">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">AccessKeySecret</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="通过阿里云安全令牌生成..."
+                                   name="attachment_aliyunoss_accesskeysecret"
+                                   value="#option('attachment_aliyunoss_accesskeysecret')">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">存储空间</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="阿里云oss的 bucketName"
+                                   name="attachment_aliyunoss_bucketname"
+                                   value="#option('attachment_aliyunoss_bucketname')">
+                        </div>
+                    </div>
+
+                    <h4 class="form-header">图片水印</h4>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">是否启用水印</label>
+                        <div class="col-sm-6">
+                            <input type="checkbox" class="switchery" data-for="attachment_watermark_enable"
+                                   #checkedIf(option("attachment_watermark_enable"))>
+                            <input type="hidden" id="attachment_watermark_enable"
+                                   name="attachment_watermark_enable">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">水印位置</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="attachment_watermark_position">
+                                <option value="1" #selectedIf(option(
+                                'attachment_watermark_position') == '1')>左上角</option>
+                                <option value="2" #selectedIf(option(
+                                'attachment_watermark_position') == '2')>右上角</option>
+                                <option value="3" #selectedIf(option(
+                                'attachment_watermark_position') == '3')>正中间</option>
+                                <option value="4" #selectedIf(option(
+                                'attachment_watermark_position') == '4')>左下角</option>
+                                <option value="5" #selectedIf(option(
+                                'attachment_watermark_position') == '5')>右下角</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">透明度</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="..."
+                                   name="attachment_watermark_transparency"
+                                   value="#option('attachment_watermark_transparency')">
+                            <p class="text-muted"> 请填写0~1的数字，默认为1不透明 </p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">水印图片</label>
+                        <div class="col-sm-6">
+                            <div class="jpress-image-browser">
+                                <input type="hidden" name="attachment_watermark_img"
+                                       value="#option('attachment_watermark_img')"/>
+                                <img src="#(CPATH)#option('attachment_watermark_img','/static/commons/img/nothumbnail.jpg')">
+                                <a class="image-reset"> <i class="fa fa-edit"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="form-header">视频云</h4>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">视频云类型</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="attachment_cloud_type" id="cloudType"
+                                    onchange="selectCloudType()">
+                                <option value="1" #selectedIf(option('attachment_cloud_type') == '1')>阿里云</option>
+                                <option value="2" #selectedIf(option('attachment_cloud_type') == '2')>腾讯云</option>
+
+                                <option value="4" #selectedIf(option('attachment_cloud_type') == '4')>本地视频</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="aliyun">
+                        <h4 class="form-header">阿里云视频点播配置</h4>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">访问密钥Id</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入访问密钥的AccessKeyId"
+                                       name="attachment_aliyunvideo_accesskeyid"
+                                       value="#option('attachment_aliyunvideo_accesskeyid')">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">访问密钥Secret</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入访问密钥的AccessKeySecret"
+                                       name="attachment_aliyunvideo_accesskeysecret"
+                                       value="#option('attachment_aliyunvideo_accesskeysecret')">
+                                <p class="text-muted">
+                                    访问密钥配置：
+                                    1.创建<a href="https://ram.console.aliyun.com/manage/ak?spm=5176.secure.top-nav.dak.3cf54babQjO4bL" target="_blank">[访问密钥]，</a>
+                                    2.<a href="https://help.aliyun.com/document_detail/51512.html" target="_blank">开通视频点播</a>功能，
+                                    3.启用存储管理，<a href="https://vod.console.aliyun.com/?spm=a2c4g.11186623.0.0.3ff967f1oZGHI6#/overview" target="_blank">视频点播控制台</a>
+                                    > 媒资管理配置 > 存储管理
+
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">接入地址</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入接入地址（访问域名）"
+                                       name="attachment_aliyunvideo_endpoint"
+                                       value="#option('attachment_aliyunvideo_endpoint')">
+                                <p class="text-muted">
+                                    <a href="https://help.aliyun.com/document_detail/98194.html?spm=5176.8413026.J_5905852530.8.18db1029zLmkEI" target="_blank">点播地域标识</a>
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <h4 class="form-header">阿里云直播配置<p class="text-muted"> <a href="https://help.aliyun.com/document_detail/198676.html" target="_blank">[快速入门]</a></p></h4>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">访问密钥Id</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入访问密钥的AccessKeyId"
+                                       name="attachment_aliyunlive_accesskeyid"
+                                       value="#option('attachment_aliyunlive_accesskeyid')">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">访问密钥Secret</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入访问密钥的AccessKeySecret"
+                                       name="attachment_aliyunlive_accesskeysecret"
+                                       value="#option('attachment_aliyunlive_accesskeysecret')">
+                                <p class="text-muted">直播、点播的访问密钥是通用的，但在此处也需填写 </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">直播中心</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入直播中心地域对应的regionId"
+                                       name="attachment_aliyunlive_regionid"
+                                       value="#option('attachment_aliyunlive_regionid')">
+                                <p class="text-muted">
+                                    直播中心是添加域名时选择的，直播推流域名与播流域名的直播中心所在地域要保持一致，对应的
+                                    <a href="https://help.aliyun.com/document_detail/198107.html?spm=5176.21213303.J_6704733920.10.141753c9SDhZBR&scm=20140722.S_help%40%40%E6%96%87%E6%A1%A3%40%40198107._.ID_help%40%40%E6%96%87%E6%A1%A3%40%40198107-RL_RegionId%E8%AE%BE%E7%BD%AE-LOC_main-OR_ser-V_2-P0_1" target="_blank">RegionId参数</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">应用名称</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入应用名称AppName"
+                                       name="attachment_aliyunlive_appname"
+                                       value="#option('attachment_aliyunlive_appname')">
+                                <p class="text-muted">
+                                    <a href="https://live.console.aliyun.com/?spm=a2c4g.11186623.0.0.3a292855a8d1qa#/overview"  target="_blank">视频直播控制台</a> >
+                                    地址生成器，生成地址时填写的自定义的应用名称appName
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">播放域名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入播放域名PlayDomain"
+                                       name="attachment_aliyunlive_playdomain"
+                                       value="#option('attachment_aliyunlive_playdomain')">
+                                <p class="text-muted">
+                                    视频直播控制台 > 域名管理 > 添加域名
+                                    <a href="https://help.aliyun.com/document_detail/55003.htm?spm=a2c4g.11186623.0.0.3a29af3cUHKCIn#concept-2121223"  target="_blank">文档说明</a>
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">播放鉴权key</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入播放鉴权key"
+                                       name="attachment_aliyunlive_playauthstring"
+                                       value="#option('attachment_aliyunlive_playauthstring')">
+                                <p class="text-muted">
+                                    <a href="https://help.aliyun.com/document_detail/85018.html"  target="_blank">播流和推流URL鉴权</a> 文档说明
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">推流域名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入推流域名PushDomain"
+                                       name="attachment_aliyunlive_pushdomain"
+                                       value="#option('attachment_aliyunlive_pushdomain')">
+                                <p class="text-muted">添加域名时选择“业务类型”（推流域名）</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">推流鉴权key</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入推流鉴权key"
+                                       name="attachment_aliyunlive_pushauthstring"
+                                       value="#option('attachment_aliyunlive_pushauthstring')">
+                                <p class="text-muted"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tencentyun">
+                        <h4 class="form-header">腾讯云视频点播配置</h4>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">密钥ID</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入云API密钥SecretId"
+                                       name="attachment_qcloudvideo_secretid"
+                                       value="#option('attachment_qcloudvideo_secretid')">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">密钥key</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入云API密钥SecretKey"
+                                       name="attachment_qcloudvideo_secretkey"
+                                       value="#option('attachment_qcloudvideo_secretkey')">
+                                <p class="text-muted">
+                                    <a href="https://cloud.tencent.com/document/product/598/45511" target="_blank">访问密钥[文档说明]</a>
+                                    > <a href="https://console.cloud.tencent.com/cam/capi" target="_blank">API 密钥管理</a>
+                                    ，账号ID在API密钥管理处可见。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">账号ID</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入账号 appId"
+                                       name="attachment_qcloudvideo_appid"
+                                       value="#option('attachment_qcloudvideo_appid')">
+                            </div>
+                        </div>
+
+                        <h4 class="form-header">腾讯云直播配置<p class="text-muted"> <a href="https://cloud.tencent.com/document/product/267/13551" target="_blank">[快速入门]</a></p></h4>
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">应用名称</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入应用名称appName"
+                                       name="attachment_qcloudlive_appname"
+                                       value="#option('attachment_qcloudlive_appname')">
+                                <p class="text-muted">
+                                    填写应用名称AppName，默认为 live。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">播放域名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入播放域名PlayDomain"
+                                       name="attachment_qcloudlive_playdomain"
+                                       value="#option('attachment_qcloudlive_playdomain')">
+                                <p class="text-muted"><a href="https://cloud.tencent.com/document/product/267/32831" target="_blank">播放配置</a>文档说明</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">播放鉴权key</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入播放鉴权key"
+                                       name="attachment_qcloudlive_play_key"
+                                       value="#option('attachment_qcloudlive_play_key')">
+                                <p class="text-muted">
+                                    <a href="https://cloud.tencent.com/document/product/267/32463" target="_blank">播放鉴权key</a>，需手动开启，
+                                    <a href="https://console.cloud.tencent.com/live/domainmanage" target="_blank">云直播控制台</a> > 域名管理（选择播放域名）点击管理 > 访问控制
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">播放地址有效时间</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入播放地址有效时间playTxTime"
+                                       name="attachment_qcloudlive_play_txtime"
+                                       value="#option('attachment_qcloudlive_play_txtime')">
+                                <p class="text-muted">
+                                    播放地址的有效时间： 云直播控制台 > 域名管理（选择播放域名）点击管理 > 播放配置
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">推流域名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入推流域名PushDomain"
+                                       name="attachment_qcloudlive_pushdomain"
+                                       value="#option('attachment_qcloudlive_pushdomain')">
+                                <p class="text-muted">
+                                    <a href="https://cloud.tencent.com/document/product/267/32833" target="_blank">推流配置</a>
+                                    文档说明
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">推流鉴权key</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入推流鉴权key"
+                                       name="attachment_qcloudlive_push_key"
+                                       value="#option('attachment_qcloudlive_push_key')">
+                                <p class="text-muted"> 推流鉴权key： 云直播控制台 > 域名管理（选择推流域名）点击管理 > 推流配置（鉴权配置）</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">推流地址有效时间</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" placeholder="请输入推流地址有效时间pushTxTime"
+                                       name="attachment_qcloudlive_txtime"
+                                       value="#option('attachment_qcloudlive_txtime')">
+                                <p class="text-muted"> 推流地址有效时间： 云直播控制台 > 域名管理（选择推流域名）点击管理 > 推流配置（推流地址生成器）</p>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div id="local"></div>
+
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <div class="offset-sm-2 col-sm-10 submit-block">
+                        <div class="card-submit">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card-footer -->
+            </form>
+        </div>
+    </div>
+
+</section>
+
+#end

@@ -1,0 +1,174 @@
+#@layout()
+#define script()
+<script src="#(CPATH)/static/components/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<script src="#(CPATH)/static/components/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<script src="#(CPATH)/static/components/jquery-file-upload/js/jquery.fileupload.js"></script>
+<script>
+
+    $('#cfile').fileupload({
+        url: '#(CPATH)/admin/attachment/doUplaodRootFile',
+        sequentialUploads: true,
+        done: function (e, data) {
+            if (data.result.state == "ok") {
+                toastr.options.onHidden = function () {
+                    location.reload(true);
+                }
+                toastr.success('上传成功。');
+            }else {
+                toastr.error(data.result.message,'上传失败');
+            }
+        }
+    });
+
+    function del(name) {
+        if (confirm('确定要删除文件 '+name+' 吗？删除后不可恢复')) {
+            ajaxGet("#(CPATH)/admin/attachment/doDelRootFile?name=" + name);
+        }
+    }
+</script>
+
+#end
+
+#define css()
+<link href="#(CPATH)/static/components/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet">
+#end
+
+#define content()
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <h1>
+                                根目录文件
+                                <small data-toggle="tooltip" title="" data-placement="right"
+                                       data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                                <small> 首页 / 附件 / 根目录文件</small>
+                            </h1>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6 ">
+                    <div class=" float-sm-right" style="padding-top:15px ">
+                       <span class="btn  btn-primary fileinput-button">
+                            <span> <i class="fas fa-plus"></i> 上传</span>
+                            <input id="cfile" type="file" name="files[]" multiple>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+
+        <div class="container-fluid">
+                <div class="card card-outline card-primary">
+                    <div class="card-header with-border">
+                        <form class=" admin-search-panel" action="" method="get">
+                            <input type="hidden" name="status" value="#para('status')">
+                            <div class="row">
+                                <div class="form-group col-lg-2">
+                                        <input type="text" placeholder="名称" class="form-control" name="name" value="#para('name')">
+                                </div>
+                                <div class="form-group col-lg-2">
+                                        <button type="submit" class="btn btn-primary ">查询</button>
+                                        <button type="reset" class="btn btn-default">重置</button>
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+
+                        <table class="table table-striped">
+                            <tbody>
+                            <tr>
+                                <th style="width: 10px">
+                                    <input class="tableCheckAll" id="checkall" type="checkbox" value="0"/>
+                                </th>
+                                <th style="width: 350px">文件名</th>
+                                <th style="width: 100px">大小</th>
+                                <th>修改时间</th>
+                                <th>权限</th>
+                                <th style="width: 90px">所有者</th>
+                            </tr>
+
+                            #for(f : files)
+                            <tr>
+                                <td><input name="tableItem" type="checkbox" value="#(f.name ??)"/>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <a href="#(CPATH)/#(f.name)" target="_blank">#(f.name ??)</a>
+                                    </strong>
+                                    <div class="jp-action-card">
+                                        <div class="jp-action-body">
+                                            <a href="#(CPATH)/#(f.name)" target="_blank">查看</a> |
+                                            <a href="javascript:;" onclick="del('#(f.name)')" class="red-action">删除</a>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    #(f.size ??)
+                                </td>
+                                <td>
+                                    #date(f.modifiedDate)
+                                </td>
+                                <td>
+                                    #(f.permission)
+                                </td>
+                                <td>#(f.owner)</td>
+                            </tr>
+                            #else
+                            <tr class="nodata"><td colspan="999">暂无数据</td> </tr>
+                            #end
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row">
+
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input class="form-check-input tableCheckAll" id="checkall" type="checkbox" >
+                                            <label class="form-check-label" for="checkall">全选</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-3">
+                                        <select class="form-control" name="action">
+                                            <option value="">请选择...</option>
+                                            <option value="doBatchDelRootFile" open-type="del-confirm">
+                                                批量删除
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-lg-3">
+                                        <button type="button" class="btn btn-outline-primary batchExec">批量操作</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+    </section>
+
+#end

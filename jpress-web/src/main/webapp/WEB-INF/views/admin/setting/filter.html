@@ -1,0 +1,152 @@
+#@layout()
+
+#define content()
+
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <h1>
+                                垃圾信息过滤
+                                <small data-toggle="tooltip" title="" data-placement="right"
+                                       data-trigger="hover"><i class="nav-icon far fa-question-circle"></i></small>
+                                <small> 首页 / 系统 / 垃圾信息过滤</small>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+
+        <div class="container-fluid">
+                <div class="card card-outline card-primary">
+
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form class=" form-setting" autocomplete="off"
+                          id="optionForm">
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">自定义非法关键字</label>
+                                <div class="col-sm-6">
+                                    <textarea rows="5" class="form-control"
+                                              placeholder="自定义的非法关键字..."
+                                              name="text_filter_content">#option("text_filter_content")</textarea>
+                                    <p class="text-muted"> 此处请填写要进行过滤的自定义关键字，多个用英文逗号（,）隔开。 </p>
+                                </div>
+                            </div>
+
+
+                            <h4 class="form-header">云端AI过滤</h4>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">开启云过滤功能</label>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" class="switchery" data-for="text_filter_service_enable" #checkedIf(option("text_filter_service_enable"))>
+                                    <input type="hidden" id="text_filter_service_enable" name="text_filter_service_enable">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">云过滤服务商</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="text_filter_service">
+                                        <option value="aliyun" #selectedIf(option('text_filter_service') == 'aliyun') >阿里云</option>
+                                        <option value="qcloud" #selectedIf(option('text_filter_service') == 'qcloud') >腾讯云</option>
+                                        <option value="xiaohuaerai" #selectedIf(option('text_filter_service') == 'xiaohuaerai') >小花儿AI</option>
+                                        <option value="ultrapower" #selectedIf(option('text_filter_service') == 'ultrapower') >泰岳语义工厂</option>
+                                    </select>
+
+                                    <p class="text-muted">
+                                        阿里云请参考 <a href="https://help.aliyun.com/document_detail/53427.html" target="_blank">https://help.aliyun.com/document_detail/53427.html</a><br />
+                                        腾讯云请参考 <a href="https://cloud.tencent.com/product/tms" target="_blank">https://cloud.tencent.com/product/tms</a><br />
+                                        小花儿AI请参考 <a href="https://market.aliyun.com/products/57124001/cmapi029968.html" target="_blank">https://market.aliyun.com/products/57124001/cmapi029968.html</a><br />
+                                        泰岳语义工厂请参考 <a href="https://market.aliyun.com/products/57124001/cmapi033064.html" target="_blank">https://market.aliyun.com/products/57124001/cmapi033064.html</a>
+                                    </p>
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">App Id</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="从服务商获取的 appId ..."
+                                           name="text_filter_appid"
+                                           value="#option('text_filter_appid')">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">App Secret</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="及 appSecret"
+                                           name="text_filter_appsecret"
+                                           value="#option('text_filter_appsecret')">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">regionId</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="regionId"
+                                           name="text_filter_regionid"
+                                           value="#option('text_filter_regionid')">
+                                    <p class="text-muted">
+                                        阿里云regionId请参考 <a href="https://help.aliyun.com/document_detail/198107.html?spm=5176.21213303.J_6704733920.10.141753c9SDhZBR&scm=20140722.S_help%40%40%E6%96%87%E6%A1%A3%40%40198107._.ID_help%40%40%E6%96%87%E6%A1%A3%40%40198107-RL_RegionId%E8%AE%BE%E7%BD%AE-LOC_main-OR_ser-V_2-P0_1" target="_blank">regionId参数列表</a><br />
+                                        腾讯云region请参考 <a href="https://cloud.tencent.com/document/api/1124/51864#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8" target="_blank">region公共参数</a><br />
+                                    </p>
+                                    <p class="text-muted">
+                                        阿里云和腾讯云服务商要配置参数：appId，appSecret，regionId；
+                                        小花儿AI和泰岳语义工厂服务商要配置参数：appCode
+                                    </p>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">App Code</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" placeholder="App Code"
+                                           name="text_filter_appcode"
+                                           value="#option('text_filter_appcode')">
+                                    <p class="text-muted">
+                                        App Code 的认知方式为阿里云市场的认证方式，倘若通过 AppId 和 AppSecret 认证，就没必要再设置 App Code 认证了。反过来，若填写了 App Code
+                                    就没必要填写 AppId 和 AppSecret 了。
+                                    </p>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <div class="offset-sm-2 col-sm-10 submit-block">
+                                <div class="card-submit">
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-footer -->
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+#end
